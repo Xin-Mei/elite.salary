@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>金鶯診所 — 薪資系統管理後台</title>
+<style>
+  :root {
+    --teal: #4A9B9B;
+    --teal-dark: #357575;
+    --teal-light: #6FB8B8;
+    --teal-50: #E8F3F3;
+    --cream: #F8EFDD;
+    --cream-light: #FDF7E9;
+    --pink: #F8CBC0;
+    --pink-soft: #FCE5DF;
+    --text: #2D3748;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --danger: #DC2626;
+    --success: #059669;
+    --shadow: 0 4px 16px rgba(74, 155, 155, 0.08);
+    --shadow-lg: 0 10px 30px rgba(74, 155, 155, 0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    color: var(--text);
+    background: linear-gradient(135deg, var(--cream) 0%, var(--cream-light) 45%, var(--teal-50) 100%);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+  /* === LOGO === */
+  .logo { width: 48px; height: 48px; flex-shrink: 0; }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-title { font-size: 20px; font-weight: 700; color: var(--teal-dark); letter-spacing: 2px; }
+  .logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* === Login === */
+  .login-stage {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .login-card {
+    background: white; border-radius: 24px; padding: 48px 40px;
+    box-shadow: var(--shadow-lg); width: 100%; max-width: 440px;
+    text-align: center;
+  }
+  .login-card .logo { width: 80px; height: 80px; margin: 0 auto 16px; }
+  .login-card h1 { font-size: 24px; color: var(--teal-dark); letter-spacing: 3px; }
+  .login-card .subtitle { font-size: 11px; color: var(--text-muted); letter-spacing: 4px; margin-top: 4px; }
+  .login-card .system-name {
+    font-size: 14px; color: white;
+    background: var(--teal); padding: 4px 14px; border-radius: 999px;
+    display: inline-block; margin: 14px 0 30px;
+    letter-spacing: 2px;
+  }
+  .form-field { margin-bottom: 16px; text-align: left; }
+  .form-field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+  .form-field input, .form-field select {
+    width: 100%; padding: 11px 14px; border: 1px solid var(--border);
+    border-radius: 10px; font-size: 15px; background: #FAFAFA;
+    font-family: inherit;
+  }
+  .form-field input:focus, .form-field select:focus {
+    outline: none; border-color: var(--teal); background: white;
+    box-shadow: 0 0 0 3px var(--teal-50);
+  }
+  .btn-primary {
+    background: var(--teal); color: white; border: none;
+    padding: 11px 24px; border-radius: 10px; font-size: 14px;
+    letter-spacing: 2px; cursor: pointer; font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary.block { width: 100%; padding: 14px; font-size: 15px; }
+  .btn-ghost {
+    background: transparent; color: var(--text-muted); border: 1px solid var(--border);
+    padding: 9px 18px; border-radius: 10px; font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-ghost:hover { color: var(--teal); border-color: var(--teal); }
+  .btn-danger {
+    background: white; color: var(--danger); border: 1px solid #FEE2E2;
+    padding: 9px 18px; border-radius: 10px; font-size: 13px; cursor: pointer;
+  }
+  .btn-danger:hover { background: #FEF2F2; }
+
+  .error-msg { background: #FEF2F2; color: var(--danger); padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-top: 14px; display: none; }
+  .success-msg { background: #ECFDF5; color: var(--success); padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-top: 14px; display: none; }
+
+  /* === Top bar === */
+  .topbar {
+    background: white; border-radius: 16px; padding: 16px 22px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+  .role-badge {
+    background: var(--teal); color: white;
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 11px; letter-spacing: 1px;
+  }
+  .btn-logout {
+    background: white; border: 1px solid var(--border);
+    border-radius: 999px; padding: 7px 16px; font-size: 13px;
+    color: var(--text-muted); cursor: pointer;
+  }
+  .btn-logout:hover { color: var(--teal-dark); border-color: var(--teal); }
+
+  /* === Nav tabs === */
+  .nav-tabs {
+    background: white; border-radius: 16px; padding: 8px;
+    box-shadow: var(--shadow); margin-bottom: 20px;
+    display: flex; gap: 4px; overflow-x: auto;
+  }
+  .tab {
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 14px; color: var(--text-muted);
+    cursor: pointer; white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--teal-dark); background: var(--cream-light); }
+  .tab.active { background: var(--teal); color: white; }
+
+  /* === Cards === */
+  .card { background: white; border-radius: 16px; padding: 24px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .card-title {
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .dot { width: 6px; height: 18px; background: var(--teal); border-radius: 3px; }
+  .card-title .actions { margin-left: auto; display: flex; gap: 8px; }
+
+  /* === Tables === */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+  th { background: var(--cream-light); font-weight: 600; font-size: 13px; color: var(--text-muted); }
+  tr:hover { background: var(--teal-50); cursor: pointer; }
+  tr.selected { background: var(--teal-50) !important; }
+  .table-wrap { overflow-x: auto; }
+
+  /* === Form grid === */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px 18px;
+  }
+  .form-grid .form-field { margin-bottom: 0; }
+  .form-actions { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; background: var(--cream-light); color: var(--text-muted);
+  }
+  .pill.success { background: #ECFDF5; color: var(--success); }
+  .pill.muted { background: #F3F4F6; color: var(--text-muted); }
+
+  .hidden { display: none !important; }
+
+  .filter-row {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: end;
+    margin-bottom: 18px;
+  }
+  .filter-row .form-field { margin-bottom: 0; min-width: 160px; flex: 0 1 auto; }
+
+  .empty-state { padding: 30px; text-align: center; color: var(--text-muted); font-size: 14px; }
+
+  .loading {
+    text-align: center; padding: 24px; color: var(--text-muted);
+  }
+  .loading::before {
+    content: ""; display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid var(--teal-50); border-top-color: var(--teal);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle; margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* === 計算結果展示 === */
+  .calc-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  @media (max-width: 720px) { .calc-grid { grid-template-columns: 1fr; } }
+  .calc-box { border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .calc-box h4 { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+  .calc-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; }
+  .calc-row strong { color: var(--teal-dark); }
+  .calc-net {
+    margin-top: 14px; background: linear-gradient(135deg, var(--cream), var(--pink-soft));
+    padding: 16px 20px; border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .calc-net .label { color: var(--text-muted); }
+  .calc-net .big { font-size: 28px; font-weight: 700; color: #B45309; }
+
+  .toast {
+    position: fixed; top: 20px; right: 20px; z-index: 9999;
+    padding: 12px 20px; border-radius: 10px;
+    background: white; box-shadow: var(--shadow-lg);
+    font-size: 14px;
+    border-left: 4px solid var(--teal);
+    animation: slideIn 0.3s;
+  }
+  .toast.error { border-left-color: var(--danger); }
+  .toast.success { border-left-color: var(--success); }
+  @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+</style>
+</head>
+<body>
+
+<!-- LOGO SVG -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="elite-logo" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="48" fill="#4A9B9B"/>
+      <circle cx="50" cy="50" r="44" fill="none" stroke="white" stroke-width="1.5"/>
+      <g fill="white">
+        <ellipse cx="32" cy="36" rx="4" ry="8" transform="rotate(-25 32 36)"/>
+        <ellipse cx="28" cy="46" rx="4" ry="8" transform="rotate(-15 28 46)"/>
+        <ellipse cx="32" cy="56" rx="4" ry="8" transform="rotate(-25 32 56)"/>
+        <path d="M30 30 Q35 50 38 70" stroke="white" stroke-width="1.5" fill="none"/>
+      </g>
+      <path d="M25 72 Q50 65 78 75" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <g fill="white">
+        <ellipse cx="55" cy="60" rx="10" ry="7"/>
+        <circle cx="63" cy="55" r="4.5"/>
+        <circle cx="64" cy="54" r="0.8" fill="#4A9B9B"/>
+        <path d="M67 55 L72 54 L67 56 Z"/>
+        <path d="M50 64 L42 70 L48 67 Z"/>
+        <path d="M55 66 L57 70 L55.5 70.5 Z"/>
+        <path d="M57 66 L59 70.5 L57.5 70.8 Z"/>
+      </g>
+      <text x="62" y="32" fill="white" font-family="sans-serif" font-size="12">Elite</text>
+      <text x="60" y="46" fill="white" font-family="sans-serif" font-size="12">Clinic</text>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===== Login ===== -->
+<div id="loginStage" class="login-stage">
+  <div class="login-card">
+    <svg class="logo"><use href="#elite-logo"/></svg>
+    <h1>金鶯診所</h1>
+    <div class="subtitle">Elite Clinic</div>
+    <div class="system-name">薪資系統 · 管理後台</div>
+    <form id="loginForm" autocomplete="off">
+      <div class="form-field">
+        <label>管理員帳號</label>
+        <input type="text" id="usernameInput" required placeholder="admin">
+      </div>
+      <div class="form-field">
+        <label>密碼</label>
+        <input type="password" id="passwordInput" required>
+      </div>
+      <button type="submit" class="btn-primary block" id="loginBtn">登 入</button>
+      <div class="error-msg" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== Main ===== -->
+<div id="mainStage" class="hidden">
+  <div class="container">
+    <div class="topbar">
+      <div class="topbar-left">
+        <svg class="logo"><use href="#elite-logo"/></svg>
+        <div class="logo-text">
+          <div class="logo-title">金鶯診所</div>
+          <div class="logo-sub">Elite Clinic · 薪資系統管理後台</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <span class="role-badge">系統管理員</span>
+        <span style="font-size:14px;" id="adminUserName">admin</span>
+        <button class="btn-logout" onclick="logout()">登出</button>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <div class="tab active" data-tab="emp">員工基本資料</div>
+      <div class="tab" data-tab="hours">月度工時</div>
+      <div class="tab" data-tab="var">月度變動</div>
+      <div class="tab" data-tab="calc">薪資計算</div>
+      <div class="tab" data-tab="params">系統參數</div>
+      <div class="tab" data-tab="tenure">年資對照</div>
+      <div class="tab" data-tab="admin">管理員帳密</div>
+    </div>
+
+    <!-- =========== 員工基本資料 =========== -->
+    <div class="tab-panel" id="panel-emp">
+      <div class="card">
+        <div class="card-title">
+          <span class="dot"></span> 員工清單
+          <div class="actions">
+            <button class="btn-ghost" onclick="loadEmployees()">重新載入</button>
+            <button class="btn-primary" onclick="newEmployee()">＋ 新增員工</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="empTable">
+            <thead>
+              <tr>
+                <th>員編</th><th>姓名</th><th>院區</th><th>職稱</th>
+                <th>到職日</th><th>時薪</th><th>職位加給</th><th>狀態</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="8"><div class="loading">載入中</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" id="empEditor" style="display:none">
+        <div class="card-title">
+          <span class="dot"></span> <span id="empEditorTitle">編輯員工資料</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>員工編號 *</label><input id="ef_empId"></div>
+          <div class="form-field"><label>姓名 *</label><input id="ef_name"></div>
+          <div class="form-field"><label>院區</label><input id="ef_branch" placeholder="如：三樹"></div>
+          <div class="form-field"><label>職稱</label>
+            <select id="ef_title">
+              <option>櫃台</option><option>護理師</option><option>藥師</option>
+              <option>藥助</option><option>減重櫃台</option><option>工讀</option><option>支援人員</option>
+            </select>
+          </div>
+          <div class="form-field"><label>到職日</label><input id="ef_hireDate" type="date"></div>
+          <div class="form-field"><label>加保日</label><input id="ef_insuredDate" type="date"></div>
+          <div class="form-field"><label>時薪</label><input id="ef_hourlyRate" type="number" step="0.01"></div>
+          <div class="form-field"><label>職位加給</label><input id="ef_positionBonus" type="number"></div>
+          <div class="form-field"><label>勞保投保薪資</label><input id="ef_laborInsuranceSalary" type="number"></div>
+          <div class="form-field"><label>健保投保薪資</label><input id="ef_healthInsuranceSalary" type="number"></div>
+          <div class="form-field"><label>健保眷屬數</label><input id="ef_dependents" type="number" min="0" value="0"></div>
+          <div class="form-field"><label>啟用</label>
+            <select id="ef_active"><option value="true">是</option><option value="false">否（已離職）</option></select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveEmployee()">儲存</button>
+          <button class="btn-ghost" onclick="closeEmpEditor()">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========== 月度工時 =========== -->
+    <div class="tab-panel hidden" id="panel-hours">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> 月度工時輸入</div>
+        <div class="filter-row">
+          <div class="form-field"><label>選擇員工 *</label><select id="hr_empId"></select></div>
+          <div class="form-field"><label>年月 *</label><input id="hr_ym" type="month"></div>
+          <button class="btn-ghost" onclick="loadHours()">載入</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>國上時數</label><input id="hr_holidayHours" type="number" step="0.1" value="0"></div>
+          <div class="form-field"><label>休上天數</label><input id="hr_restDays" type="number" step="0.1" value="0"></div>
+          <div class="form-field"><label>加班 1.34 時數（8–10 小時）</label><input id="hr_overtime134" type="number" step="0.01" value="0"></div>
+          <div class="form-field"><label>加班 1.67 時數（>10 小時）</label><input id="hr_overtime167" type="number" step="0.01" value="0"></div>
+          <div class="form-field"><label>本月遲到</label><input id="hr_lateCount" type="number" value="0"></div>
+          <div class="form-field"><label>累計遲到</label><input id="hr_lateAccum" type="number" value="0"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveHours()">儲存月度工時</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========== 月度變動 =========== -->
+    <div class="tab-panel hidden" id="panel-var">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> 月度變動項目輸入</div>
+        <div class="filter-row">
+          <div class="form-field"><label>選擇員工 *</label><select id="vr_empId"></select></div>
+          <div class="form-field"><label>年月 *</label><input id="vr_ym" type="month"></div>
+          <button class="btn-ghost" onclick="loadVar()">載入</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>服務獎金（18–22週等）</label><input id="vr_serviceBonus" type="number" value="0"></div>
+          <div class="form-field"><label>績效獎金</label><input id="vr_performanceBonus" type="number" value="0"></div>
+          <div class="form-field"><label>評論獎金</label><input id="vr_reviewBonus" type="number" value="0"></div>
+          <div class="form-field"><label>商品扣款</label><input id="vr_productDeduction" type="number" value="0"></div>
+          <div class="form-field"><label>其他加項</label><input id="vr_otherAddition" type="number" value="0"></div>
+          <div class="form-field"><label>其他扣項</label><input id="vr_otherDeduction" type="number" value="0"></div>
+          <div class="form-field"><label>現金（其餘自動算為轉帳）</label><input id="vr_cash" type="number" value="0"></div>
+          <div class="form-field" style="grid-column:1/-1"><label>備註</label><input id="vr_note"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveVar()">儲存月度變動</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========== 薪資計算 =========== -->
+    <div class="tab-panel hidden" id="panel-calc">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> 薪資計算 / 試算</div>
+        <div class="filter-row">
+          <div class="form-field"><label>選擇員工 *</label><select id="cl_empId"></select></div>
+          <div class="form-field"><label>年月 *</label><input id="cl_ym" type="month"></div>
+          <button class="btn-primary" onclick="doCalculate()">計算薪資</button>
+        </div>
+        <div id="calcResult"></div>
+      </div>
+    </div>
+
+    <!-- =========== 系統參數 =========== -->
+    <div class="tab-panel hidden" id="panel-params">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> 系統參數</div>
+        <div class="form-grid">
+          <div class="form-field"><label>月基本工時</label><input id="pm_baseHours" type="number"></div>
+          <div class="form-field"><label>加班倍率1（8–10小時）</label><input id="pm_otRate1" type="number" step="0.01"></div>
+          <div class="form-field"><label>加班倍率2（>10小時）</label><input id="pm_otRate2" type="number" step="0.01"></div>
+          <div class="form-field"><label>休上倍率分子</label><input id="pm_restNumerator" type="number"></div>
+          <div class="form-field"><label>休上倍率分母</label><input id="pm_restDenominator" type="number"></div>
+          <div class="form-field"><label>國上倍率</label><input id="pm_holidayMultiplier" type="number" step="0.01"></div>
+          <div class="form-field"><label>勞保員工自付比率</label><input id="pm_laborInsuranceEmpRate" type="number" step="0.0001"></div>
+          <div class="form-field"><label>健保費率</label><input id="pm_healthInsuranceRate" type="number" step="0.0001"></div>
+          <div class="form-field"><label>健保員工自付比率</label><input id="pm_healthInsuranceEmpRate" type="number" step="0.01"></div>
+          <div class="form-field"><label>遲到單次扣款</label><input id="pm_lateDeduction" type="number"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveParams()">儲存參數</button>
+          <button class="btn-ghost" onclick="loadParams()">重新載入</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========== 年資對照 =========== -->
+    <div class="tab-panel hidden" id="panel-tenure">
+      <div class="card">
+        <div class="card-title">
+          <span class="dot"></span> 年資對照表
+          <div class="actions">
+            <button class="btn-ghost" onclick="addTenureRow()">＋ 新增列</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="tenureTable">
+            <thead>
+              <tr><th style="width:40%">滿年數</th><th style="width:40%">年資獎金</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveTenure()">儲存對照表</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========== 管理員帳密 =========== -->
+    <div class="tab-panel hidden" id="panel-admin">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> 變更管理員密碼</div>
+        <div class="form-grid">
+          <div class="form-field"><label>目前帳號</label><input id="ad_username" readonly></div>
+          <div class="form-field"><label>原密碼</label><input id="ad_oldPwd" type="password"></div>
+          <div class="form-field"><label>新密碼</label><input id="ad_newPwd" type="password"></div>
+          <div class="form-field"><label>再次輸入新密碼</label><input id="ad_newPwd2" type="password"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="changeAdminPwd()">更新密碼</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toastBox"></div>
+
+<script>
+// ===========================================
+// 設定：請貼上 GAS Web App URL
+// ===========================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxixa4obn-jvUidizmWt62wdyWgjJAsyCtIZ3ceNzuhApHP7pJXMZ5LVRIer3l_iBmu/exec';
+
+const admin = { username: null };
+let employees = [];   // cache
+let editingEmpId = null;
+
+// ===== API =====
+async function callApi(action, payload) {
+  const body = Object.assign({ action }, payload || {});
+  const res = await fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body),
+    redirect: 'follow'
+  });
+  if (!res.ok) throw new Error('網路錯誤 ' + res.status);
+  return await res.json();
+}
+
+function toast(msg, type) {
+  const box = document.getElementById('toastBox');
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' ' + type : '');
+  el.textContent = msg;
+  box.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 2500);
+}
+
+// ===== Login =====
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const u = document.getElementById('usernameInput').value.trim();
+  const p = document.getElementById('passwordInput').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = '登入中…';
+  try {
+    if (GAS_URL === '__GAS_URL__' || !GAS_URL) throw new Error('尚未設定 GAS_URL');
+    const r = await callApi('adminLogin', { username: u, password: p });
+    if (!r.ok) throw new Error(r.error);
+    admin.username = r.username;
+    sessionStorage.setItem('adminSession', JSON.stringify(admin));
+    enterMain();
+  } catch (ex) {
+    err.textContent = ex.message; err.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = '登 入';
+  }
+});
+
+function enterMain() {
+  document.getElementById('loginStage').classList.add('hidden');
+  document.getElementById('mainStage').classList.remove('hidden');
+  document.getElementById('adminUserName').textContent = admin.username;
+  document.getElementById('ad_username').value = admin.username;
+  loadEmployees();
+  loadParams();
+  loadTenure();
+}
+
+function logout() {
+  sessionStorage.removeItem('adminSession');
+  admin.username = null;
+  document.getElementById('mainStage').classList.add('hidden');
+  document.getElementById('loginStage').classList.remove('hidden');
+  document.getElementById('loginForm').reset();
+}
+
+// ===== Tabs =====
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.remove('hidden');
+  };
+});
+
+// ===== 員工管理 =====
+async function loadEmployees() {
+  const tb = document.querySelector('#empTable tbody');
+  tb.innerHTML = '<tr><td colspan="8"><div class="loading">載入中</div></td></tr>';
+  try {
+    const r = await callApi('getEmployees');
+    if (!r.ok) throw new Error(r.error);
+    employees = r.data || [];
+    if (employees.length === 0) {
+      tb.innerHTML = '<tr><td colspan="8"><div class="empty-state">尚無員工資料,請點「新增員工」</div></td></tr>';
+      populateEmpSelects();
+      return;
+    }
+    tb.innerHTML = '';
+    employees.forEach(e => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${e.empId}</td><td>${e.name}</td><td>${e.branch || ''}</td><td>${e.title || ''}</td>
+        <td>${e.hireDate || ''}</td><td>${e.hourlyRate || 0}</td><td>${e.positionBonus || 0}</td>
+        <td>${e.active ? '<span class="pill success">啟用</span>' : '<span class="pill muted">停用</span>'}</td>`;
+      tr.onclick = () => editEmployee(e.empId);
+      tb.appendChild(tr);
+    });
+    populateEmpSelects();
+  } catch (ex) {
+    tb.innerHTML = `<tr><td colspan="8"><div class="empty-state" style="color:var(--danger)">${ex.message}</div></td></tr>`;
+  }
+}
+
+function populateEmpSelects() {
+  ['hr_empId','vr_empId','cl_empId'].forEach(id => {
+    const sel = document.getElementById(id);
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— 請選擇 —</option>' +
+      employees.filter(e => e.active).map(e =>
+        `<option value="${e.empId}">${e.empId} ${e.name}</option>`).join('');
+    if (cur) sel.value = cur;
+  });
+}
+
+function newEmployee() {
+  editingEmpId = null;
+  document.getElementById('empEditorTitle').textContent = '新增員工';
+  ['ef_empId','ef_name','ef_branch','ef_hireDate','ef_insuredDate'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ef_title').value = '櫃台';
+  document.getElementById('ef_hourlyRate').value = 0;
+  document.getElementById('ef_positionBonus').value = 0;
+  document.getElementById('ef_laborInsuranceSalary').value = 0;
+  document.getElementById('ef_healthInsuranceSalary').value = 0;
+  document.getElementById('ef_dependents').value = 0;
+  document.getElementById('ef_active').value = 'true';
+  document.getElementById('ef_empId').readOnly = false;
+  document.getElementById('empEditor').style.display = 'block';
+  window.scrollTo({top: document.getElementById('empEditor').offsetTop, behavior: 'smooth'});
+}
+
+function editEmployee(empId) {
+  const e = employees.find(x => x.empId === empId);
+  if (!e) return;
+  editingEmpId = empId;
+  document.getElementById('empEditorTitle').textContent = '編輯員工：' + e.name;
+  document.getElementById('ef_empId').value = e.empId;
+  document.getElementById('ef_empId').readOnly = true;
+  document.getElementById('ef_name').value = e.name;
+  document.getElementById('ef_branch').value = e.branch || '';
+  document.getElementById('ef_title').value = e.title || '櫃台';
+  document.getElementById('ef_hireDate').value = e.hireDate || '';
+  document.getElementById('ef_insuredDate').value = e.insuredDate || '';
+  document.getElementById('ef_hourlyRate').value = e.hourlyRate;
+  document.getElementById('ef_positionBonus').value = e.positionBonus;
+  document.getElementById('ef_laborInsuranceSalary').value = e.laborInsuranceSalary;
+  document.getElementById('ef_healthInsuranceSalary').value = e.healthInsuranceSalary;
+  document.getElementById('ef_dependents').value = e.dependents;
+  document.getElementById('ef_active').value = e.active ? 'true' : 'false';
+  document.getElementById('empEditor').style.display = 'block';
+  window.scrollTo({top: document.getElementById('empEditor').offsetTop, behavior: 'smooth'});
+}
+
+function closeEmpEditor() {
+  document.getElementById('empEditor').style.display = 'none';
+}
+
+async function saveEmployee() {
+  const data = {
+    empId: document.getElementById('ef_empId').value.trim(),
+    name: document.getElementById('ef_name').value.trim(),
+    branch: document.getElementById('ef_branch').value.trim(),
+    title: document.getElementById('ef_title').value,
+    hireDate: document.getElementById('ef_hireDate').value,
+    insuredDate: document.getElementById('ef_insuredDate').value,
+    hourlyRate: Number(document.getElementById('ef_hourlyRate').value),
+    positionBonus: Number(document.getElementById('ef_positionBonus').value),
+    laborInsuranceSalary: Number(document.getElementById('ef_laborInsuranceSalary').value),
+    healthInsuranceSalary: Number(document.getElementById('ef_healthInsuranceSalary').value),
+    dependents: Number(document.getElementById('ef_dependents').value),
+    active: document.getElementById('ef_active').value === 'true'
+  };
+  if (!data.empId || !data.name) { toast('員編與姓名必填', 'error'); return; }
+  try {
+    const r = await callApi('saveEmployee', { data: data });
+    if (!r.ok) throw new Error(r.error);
+    toast('已儲存', 'success');
+    closeEmpEditor();
+    loadEmployees();
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+// ===== 月度工時 =====
+async function loadHours() {
+  const empId = document.getElementById('hr_empId').value;
+  const ym = document.getElementById('hr_ym').value;
+  if (!empId || !ym) { toast('請選擇員工與年月', 'error'); return; }
+  try {
+    const r = await callApi('getMonthlyHours', { empId, yearMonth: ym });
+    if (!r.ok) throw new Error(r.error);
+    const d = r.data || {};
+    document.getElementById('hr_holidayHours').value = d.holidayHours || 0;
+    document.getElementById('hr_restDays').value = d.restDays || 0;
+    document.getElementById('hr_overtime134').value = d.overtime134 || 0;
+    document.getElementById('hr_overtime167').value = d.overtime167 || 0;
+    document.getElementById('hr_lateCount').value = d.lateCount || 0;
+    document.getElementById('hr_lateAccum').value = d.lateAccum || 0;
+    toast(d && d.empId ? '已載入' : '尚無資料,可直接輸入', 'success');
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+async function saveHours() {
+  const data = {
+    empId: document.getElementById('hr_empId').value,
+    yearMonth: document.getElementById('hr_ym').value,
+    holidayHours: Number(document.getElementById('hr_holidayHours').value),
+    restDays: Number(document.getElementById('hr_restDays').value),
+    overtime134: Number(document.getElementById('hr_overtime134').value),
+    overtime167: Number(document.getElementById('hr_overtime167').value),
+    lateCount: Number(document.getElementById('hr_lateCount').value),
+    lateAccum: Number(document.getElementById('hr_lateAccum').value)
+  };
+  if (!data.empId || !data.yearMonth) { toast('請選擇員工與年月', 'error'); return; }
+  try {
+    const r = await callApi('saveMonthlyHours', { data });
+    if (!r.ok) throw new Error(r.error);
+    toast('已儲存', 'success');
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+// ===== 月度變動 =====
+async function loadVar() {
+  const empId = document.getElementById('vr_empId').value;
+  const ym = document.getElementById('vr_ym').value;
+  if (!empId || !ym) { toast('請選擇員工與年月', 'error'); return; }
+  try {
+    const r = await callApi('getMonthlyVariable', { empId, yearMonth: ym });
+    if (!r.ok) throw new Error(r.error);
+    const d = r.data || {};
+    document.getElementById('vr_serviceBonus').value = d.serviceBonus || 0;
+    document.getElementById('vr_performanceBonus').value = d.performanceBonus || 0;
+    document.getElementById('vr_reviewBonus').value = d.reviewBonus || 0;
+    document.getElementById('vr_productDeduction').value = d.productDeduction || 0;
+    document.getElementById('vr_otherAddition').value = d.otherAddition || 0;
+    document.getElementById('vr_otherDeduction').value = d.otherDeduction || 0;
+    document.getElementById('vr_cash').value = d.cash || 0;
+    document.getElementById('vr_note').value = d.note || '';
+    toast(d && d.empId ? '已載入' : '尚無資料,可直接輸入', 'success');
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+async function saveVar() {
+  const data = {
+    empId: document.getElementById('vr_empId').value,
+    yearMonth: document.getElementById('vr_ym').value,
+    serviceBonus: Number(document.getElementById('vr_serviceBonus').value),
+    performanceBonus: Number(document.getElementById('vr_performanceBonus').value),
+    reviewBonus: Number(document.getElementById('vr_reviewBonus').value),
+    productDeduction: Number(document.getElementById('vr_productDeduction').value),
+    otherAddition: Number(document.getElementById('vr_otherAddition').value),
+    otherDeduction: Number(document.getElementById('vr_otherDeduction').value),
+    cash: Number(document.getElementById('vr_cash').value),
+    note: document.getElementById('vr_note').value
+  };
+  if (!data.empId || !data.yearMonth) { toast('請選擇員工與年月', 'error'); return; }
+  try {
+    const r = await callApi('saveMonthlyVariable', { data });
+    if (!r.ok) throw new Error(r.error);
+    toast('已儲存', 'success');
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+// ===== 薪資計算 =====
+async function doCalculate() {
+  const empId = document.getElementById('cl_empId').value;
+  const ym = document.getElementById('cl_ym').value;
+  if (!empId || !ym) { toast('請選擇員工與年月', 'error'); return; }
+  const out = document.getElementById('calcResult');
+  out.innerHTML = '<div class="loading">計算中…</div>';
+  try {
+    const r = await callApi('calculatePayroll', { empId, yearMonth: ym });
+    if (!r.ok) throw new Error(r.error);
+    renderCalc(r.data);
+    toast('已計算並寫入薪資計算結果分頁', 'success');
+  } catch (ex) {
+    out.innerHTML = `<div class="empty-state" style="color:var(--danger)">${ex.message}</div>`;
+  }
+}
+
+function renderCalc(d) {
+  const fmt = n => '$' + (Number(n) || 0).toLocaleString();
+  const out = document.getElementById('calcResult');
+  out.innerHTML = `
+    <div class="calc-grid">
+      <div class="calc-box">
+        <h4>應支項目</h4>
+        <div class="calc-row"><span>基本薪資（${d.hourlyRate} × ${d.baseHours}）</span><strong>${fmt(d.baseSalary)}</strong></div>
+        <div class="calc-row"><span>國上加給</span><strong>${fmt(d.holidayPay)}</strong></div>
+        <div class="calc-row"><span>休上加給</span><strong>${fmt(d.restDayPay)}</strong></div>
+        <div class="calc-row"><span>加班費</span><strong>${fmt(d.overtimePay)}</strong></div>
+        <div class="calc-row"><span>服務獎金</span><strong>${fmt(d.serviceBonus)}</strong></div>
+        <div class="calc-row"><span>年資獎金</span><strong>${fmt(d.tenureBonus)}</strong></div>
+        <div class="calc-row"><span>職位加給</span><strong>${fmt(d.positionBonus)}</strong></div>
+        <div class="calc-row"><span>績效獎金</span><strong>${fmt(d.performanceBonus)}</strong></div>
+        <div class="calc-row"><span>評論獎金</span><strong>${fmt(d.reviewBonus)}</strong></div>
+        <div class="calc-row"><span>其他加項</span><strong>${fmt(d.otherAddition)}</strong></div>
+        <div class="calc-row" style="border-top:1px solid var(--border); margin-top:8px; padding-top:8px;"><span><b>應支總計</b></span><strong>${fmt(d.totalIncome)}</strong></div>
+      </div>
+      <div class="calc-box">
+        <h4>應扣項目</h4>
+        <div class="calc-row"><span>勞保</span><strong>${fmt(d.laborDeduction)}</strong></div>
+        <div class="calc-row"><span>健保（含眷屬 ${d.dependents}）</span><strong>${fmt(d.healthDeduction)}</strong></div>
+        <div class="calc-row"><span>遲到扣款（${d.lateCount} 次）</span><strong>${fmt(d.lateDeductionAmount)}</strong></div>
+        <div class="calc-row"><span>商品扣款</span><strong>${fmt(d.productDeduction)}</strong></div>
+        <div class="calc-row"><span>其他扣項</span><strong>${fmt(d.otherDeduction)}</strong></div>
+        <div class="calc-row" style="border-top:1px solid var(--border); margin-top:8px; padding-top:8px;"><span><b>應扣總計</b></span><strong>${fmt(d.totalDeduction)}</strong></div>
+      </div>
+    </div>
+    <div class="calc-net">
+      <div>
+        <div class="label">${d.name} (${d.empId}) — ${d.yearMonth}</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">
+          現金 ${fmt(d.cash)}　|　轉帳 ${fmt(d.transfer)}
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div class="label">實領金額</div>
+        <div class="big">${fmt(d.netPay)}</div>
+      </div>
+    </div>`;
+}
+
+// ===== 系統參數 =====
+async function loadParams() {
+  try {
+    const r = await callApi('getParams');
+    if (!r.ok) throw new Error(r.error);
+    const p = r.data;
+    document.getElementById('pm_baseHours').value = p.baseHours;
+    document.getElementById('pm_otRate1').value = p.otRate1;
+    document.getElementById('pm_otRate2').value = p.otRate2;
+    document.getElementById('pm_restNumerator').value = p.restNumerator;
+    document.getElementById('pm_restDenominator').value = p.restDenominator;
+    document.getElementById('pm_holidayMultiplier').value = p.holidayMultiplier;
+    document.getElementById('pm_laborInsuranceEmpRate').value = p.laborInsuranceEmpRate;
+    document.getElementById('pm_healthInsuranceRate').value = p.healthInsuranceRate;
+    document.getElementById('pm_healthInsuranceEmpRate').value = p.healthInsuranceEmpRate;
+    document.getElementById('pm_lateDeduction').value = p.lateDeduction;
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+async function saveParams() {
+  const data = {
+    '月基本工時': Number(document.getElementById('pm_baseHours').value),
+    '加班倍率1': Number(document.getElementById('pm_otRate1').value),
+    '加班倍率2': Number(document.getElementById('pm_otRate2').value),
+    '休上倍率分子': Number(document.getElementById('pm_restNumerator').value),
+    '休上倍率分母': Number(document.getElementById('pm_restDenominator').value),
+    '國上倍率': Number(document.getElementById('pm_holidayMultiplier').value),
+    '勞保員工自付比率': Number(document.getElementById('pm_laborInsuranceEmpRate').value),
+    '健保費率': Number(document.getElementById('pm_healthInsuranceRate').value),
+    '健保員工自付比率': Number(document.getElementById('pm_healthInsuranceEmpRate').value),
+    '遲到單次扣款': Number(document.getElementById('pm_lateDeduction').value)
+  };
+  try {
+    const r = await callApi('saveParams', { data });
+    if (!r.ok) throw new Error(r.error);
+    toast('參數已儲存', 'success');
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+// ===== 年資對照 =====
+let tenureList = [];
+async function loadTenure() {
+  try {
+    const r = await callApi('getTenure');
+    if (!r.ok) throw new Error(r.error);
+    tenureList = r.data || [];
+    renderTenure();
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+function renderTenure() {
+  const tb = document.querySelector('#tenureTable tbody');
+  tb.innerHTML = '';
+  tenureList.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="number" value="${row.years}" style="width:120px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="tenureList[${i}].years=Number(this.value)"></td>
+      <td><input type="number" value="${row.bonus}" style="width:160px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="tenureList[${i}].bonus=Number(this.value)"></td>
+      <td><button class="btn-danger" onclick="tenureList.splice(${i},1); renderTenure();">刪除</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function addTenureRow() {
+  tenureList.push({ years: 0, bonus: 0 });
+  renderTenure();
+}
+
+async function saveTenure() {
+  try {
+    const r = await callApi('saveTenure', { data: tenureList });
+    if (!r.ok) throw new Error(r.error);
+    toast('年資對照已儲存', 'success');
+    loadTenure();
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+// ===== 管理員帳密 =====
+async function changeAdminPwd() {
+  const oldPwd = document.getElementById('ad_oldPwd').value;
+  const np1 = document.getElementById('ad_newPwd').value;
+  const np2 = document.getElementById('ad_newPwd2').value;
+  if (!oldPwd || !np1) { toast('請填寫所有欄位', 'error'); return; }
+  if (np1 !== np2) { toast('兩次輸入的新密碼不一致', 'error'); return; }
+  try {
+    const r = await callApi('changeAdminPassword', { username: admin.username, oldPassword: oldPwd, newPassword: np1 });
+    if (!r.ok) throw new Error(r.error);
+    toast('密碼已更新', 'success');
+    document.getElementById('ad_oldPwd').value = '';
+    document.getElementById('ad_newPwd').value = '';
+    document.getElementById('ad_newPwd2').value = '';
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+// ===== Auto restore =====
+(function tryRestore() {
+  const raw = sessionStorage.getItem('adminSession');
+  if (!raw) return;
+  try {
+    const s = JSON.parse(raw);
+    if (s && s.username) { admin.username = s.username; enterMain(); }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>金鶯診所 — 員工薪資計算系統</title>
+<style>
+  /* ===== 設計變數（取自員工入口網風格） ===== */
+  :root {
+    --teal: #4A9B9B;
+    --teal-dark: #357575;
+    --teal-light: #6FB8B8;
+    --teal-50: #E8F3F3;
+    --cream: #F8EFDD;
+    --cream-light: #FDF7E9;
+    --pink: #F8CBC0;
+    --pink-soft: #FCE5DF;
+    --text: #2D3748;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --danger: #DC2626;
+    --shadow: 0 4px 16px rgba(74, 155, 155, 0.08);
+    --shadow-lg: 0 10px 30px rgba(74, 155, 155, 0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    color: var(--text);
+    background: linear-gradient(135deg, var(--cream) 0%, var(--cream-light) 45%, var(--teal-50) 100%);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* ===== LOGO ===== */
+  .logo-wrap { display: flex; align-items: center; gap: 16px; }
+  .logo {
+    width: 64px; height: 64px;
+    flex-shrink: 0;
+  }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-title {
+    font-size: 24px; font-weight: 700; color: var(--teal-dark);
+    letter-spacing: 2px;
+  }
+  .logo-sub {
+    font-size: 11px; color: var(--text-muted);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ===== Header ===== */
+  .topbar {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 28px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+  .user-badge {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .user-meta strong { display: block; color: var(--text); }
+  .user-meta span { font-size: 12px; color: var(--text-muted); }
+  .btn-logout {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { color: var(--teal-dark); border-color: var(--teal); }
+
+  /* ===== 登入畫面 ===== */
+  .login-stage {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .login-card {
+    background: white;
+    border-radius: 24px;
+    padding: 48px 40px;
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+  }
+  .login-card .logo { width: 88px; height: 88px; margin: 0 auto 20px; }
+  .login-card h1 {
+    font-size: 26px; color: var(--teal-dark);
+    letter-spacing: 4px; margin-bottom: 4px;
+  }
+  .login-card .subtitle {
+    font-size: 12px; color: var(--text-muted);
+    letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .login-card .system-name {
+    font-size: 16px; color: var(--text-muted);
+    margin-bottom: 36px;
+    letter-spacing: 2px;
+  }
+  .form-field { margin-bottom: 18px; text-align: left; }
+  .form-field label {
+    display: block; font-size: 13px; color: var(--text-muted);
+    margin-bottom: 6px; letter-spacing: 1px;
+  }
+  .form-field input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 15px;
+    background: #FAFAFA;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .form-field input:focus {
+    outline: none;
+    border-color: var(--teal);
+    background: white;
+    box-shadow: 0 0 0 3px var(--teal-50);
+  }
+  .btn-primary {
+    width: 100%;
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .error-msg {
+    background: #FEF2F2;
+    color: var(--danger);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-top: 14px;
+    display: none;
+  }
+
+  /* ===== 主畫面 ===== */
+  .welcome {
+    text-align: center;
+    margin: 24px 0 32px;
+  }
+  .welcome .small {
+    font-size: 12px; color: var(--text-muted);
+    letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .welcome h2 {
+    font-size: 32px; color: var(--text);
+    font-weight: 400; letter-spacing: 4px;
+  }
+  .welcome h2 strong { color: var(--teal-dark); font-weight: 700; }
+  .welcome .hint {
+    font-size: 14px; color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  /* ===== 月份列 ===== */
+  .section-card {
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .section-title .dot {
+    width: 6px; height: 18px; background: var(--teal); border-radius: 3px;
+  }
+  .month-list {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .month-chip {
+    background: var(--cream-light);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .month-chip:hover { border-color: var(--teal); }
+  .month-chip.active {
+    background: var(--teal);
+    color: white;
+    border-color: var(--teal);
+  }
+  .month-chip small {
+    font-size: 11px; opacity: 0.7;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* ===== 薪資單 ===== */
+  .payslip-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+    color: white;
+    border-radius: 18px 18px 0 0;
+    padding: 24px 28px;
+    margin: -24px -24px 24px;
+  }
+  .payslip-header h3 {
+    font-size: 22px; letter-spacing: 2px;
+  }
+  .payslip-header .meta {
+    text-align: right; font-size: 13px; opacity: 0.9;
+  }
+  .payslip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 720px) {
+    .payslip-grid { grid-template-columns: 1fr; }
+  }
+  .payslip-box {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .payslip-box-title {
+    background: var(--cream-light);
+    padding: 10px 16px;
+    font-size: 14px; font-weight: 600;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .payslip-box-title .tag {
+    background: var(--teal);
+    color: white;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 400;
+  }
+  .payslip-box-title.deduct .tag { background: var(--pink); color: #8B3A2B; }
+  .payslip-rows { padding: 8px 0; }
+  .row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  .row .label { color: var(--text-muted); }
+  .row .value { font-weight: 500; }
+  .row.subtotal {
+    margin-top: 4px;
+    background: var(--cream-light);
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    font-weight: 700;
+  }
+  .row.subtotal .value { color: var(--teal-dark); font-size: 16px; }
+  .row.subtotal.deduct .value { color: var(--danger); }
+
+  .summary {
+    margin-top: 24px;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--pink-soft) 100%);
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  @media (max-width: 720px) {
+    .summary { grid-template-columns: 1fr; gap: 12px; text-align: left; }
+    .summary > div { display: flex; justify-content: space-between; align-items: baseline; }
+  }
+  .summary .label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+  .summary .big { font-size: 28px; font-weight: 700; color: var(--teal-dark); }
+  .summary .big.net { color: #B45309; font-size: 34px; }
+
+  .loading {
+    text-align: center; padding: 32px;
+    color: var(--text-muted);
+  }
+  .loading::before {
+    content: "";
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid var(--teal-50);
+    border-top-color: var(--teal);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- LOGO SVG（重複使用） -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="elite-logo" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="48" fill="#4A9B9B"/>
+      <circle cx="50" cy="50" r="44" fill="none" stroke="white" stroke-width="1.5"/>
+      <!-- 葉子 -->
+      <g fill="white">
+        <ellipse cx="32" cy="36" rx="4" ry="8" transform="rotate(-25 32 36)"/>
+        <ellipse cx="28" cy="46" rx="4" ry="8" transform="rotate(-15 28 46)"/>
+        <ellipse cx="32" cy="56" rx="4" ry="8" transform="rotate(-25 32 56)"/>
+        <path d="M30 30 Q35 50 38 70" stroke="white" stroke-width="1.5" fill="none"/>
+      </g>
+      <!-- 樹枝 -->
+      <path d="M25 72 Q50 65 78 75" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- 鳥 -->
+      <g fill="white">
+        <ellipse cx="55" cy="60" rx="10" ry="7"/>
+        <circle cx="63" cy="55" r="4.5"/>
+        <circle cx="64" cy="54" r="0.8" fill="#4A9B9B"/>
+        <path d="M67 55 L72 54 L67 56 Z"/>
+        <path d="M50 64 L42 70 L48 67 Z"/>
+        <path d="M55 66 L57 70 L55.5 70.5 Z"/>
+        <path d="M57 66 L59 70.5 L57.5 70.8 Z"/>
+      </g>
+      <!-- 文字 -->
+      <text x="62" y="32" fill="white" font-family="sans-serif" font-size="12" font-weight="300">Elite</text>
+      <text x="60" y="46" fill="white" font-family="sans-serif" font-size="12" font-weight="300">Clinic</text>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ====================== 登入畫面 ====================== -->
+<div id="loginStage" class="login-stage">
+  <div class="login-card">
+    <svg class="logo"><use href="#elite-logo"/></svg>
+    <h1>金鶯診所</h1>
+    <div class="subtitle">Elite Clinic</div>
+    <div class="system-name">員工薪資計算系統</div>
+
+    <form id="loginForm" autocomplete="off">
+      <div class="form-field">
+        <label>員工編號</label>
+        <input type="text" id="empIdInput" required placeholder="例如 0007">
+      </div>
+      <div class="form-field">
+        <label>密碼</label>
+        <input type="password" id="passwordInput" required>
+      </div>
+      <button type="submit" class="btn-primary" id="loginBtn">登 入</button>
+      <div class="error-msg" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ====================== 主畫面 ====================== -->
+<div id="mainStage" class="hidden">
+  <div class="container">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="logo-wrap">
+        <svg class="logo"><use href="#elite-logo"/></svg>
+        <div class="logo-text">
+          <div class="logo-title">金鶯診所</div>
+          <div class="logo-sub">Elite Clinic · 員工薪資計算系統</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="user-info">
+          <div class="user-badge" id="userBadge">員</div>
+          <div class="user-meta">
+            <strong id="userName">員工</strong>
+            <span id="userEmpId">0000</span>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">登出</button>
+      </div>
+    </div>
+
+    <!-- Welcome -->
+    <div class="welcome">
+      <div class="small">Welcome Back</div>
+      <h2><strong id="welcomeName">您</strong>　您好</h2>
+      <div class="hint">請選擇要查詢的薪資月份</div>
+    </div>
+
+    <!-- 月份列表 -->
+    <div class="section-card">
+      <div class="section-title"><span class="dot"></span> 可查詢月份</div>
+      <div id="monthList" class="month-list">
+        <div class="loading">載入中</div>
+      </div>
+    </div>
+
+    <!-- 薪資單詳細 -->
+    <div id="payslipCard" class="section-card hidden">
+      <div class="payslip-header">
+        <div>
+          <h3 id="psMonth">2026 年 05 月</h3>
+          <div style="font-size:13px; opacity:0.9; margin-top:4px;">薪資明細</div>
+        </div>
+        <div class="meta">
+          <div id="psName">員工</div>
+          <div id="psEmpId" style="font-size:11px;">0000</div>
+        </div>
+      </div>
+
+      <div class="payslip-grid">
+        <!-- 應支 -->
+        <div class="payslip-box">
+          <div class="payslip-box-title">
+            <span class="tag">應支</span>
+            <span>收入項目</span>
+          </div>
+          <div class="payslip-rows" id="incomeRows"></div>
+        </div>
+
+        <!-- 應扣 -->
+        <div class="payslip-box">
+          <div class="payslip-box-title deduct">
+            <span class="tag">應扣</span>
+            <span>扣款項目</span>
+          </div>
+          <div class="payslip-rows" id="deductRows"></div>
+        </div>
+      </div>
+
+      <!-- 總結 -->
+      <div class="summary">
+        <div>
+          <div class="label">應支總計</div>
+          <div class="big" id="sumIncome">$0</div>
+        </div>
+        <div>
+          <div class="label">應扣總計</div>
+          <div class="big" id="sumDeduct">$0</div>
+        </div>
+        <div>
+          <div class="label">實領金額</div>
+          <div class="big net" id="sumNet">$0</div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:var(--text-muted);">
+        <div>現金：<strong id="psCash" style="color:var(--text)">$0</strong></div>
+        <div>轉帳：<strong id="psTransfer" style="color:var(--text)">$0</strong></div>
+        <div style="margin-left:auto;" id="psCalcTime"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================================================
+// 設定：請貼上 GAS Web App URL
+// ======================================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxixa4obn-jvUidizmWt62wdyWgjJAsyCtIZ3ceNzuhApHP7pJXMZ5LVRIer3l_iBmu/exec';
+
+// ====== API 呼叫 ======
+async function callApi(action, payload) {
+  const body = Object.assign({ action }, payload || {});
+  const res = await fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body),
+    redirect: 'follow'
+  });
+  if (!res.ok) throw new Error('網路錯誤 ' + res.status);
+  return await res.json();
+}
+
+// ====== 登入 ======
+const session = { empId: null, name: null };
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const empId = document.getElementById('empIdInput').value.trim();
+  const password = document.getElementById('passwordInput').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = '登入中…';
+  try {
+    if (GAS_URL === '__GAS_URL__' || !GAS_URL) {
+      throw new Error('尚未設定 GAS_URL,請聯絡管理員');
+    }
+    const r = await callApi('employeeLogin', { empId, password });
+    if (!r.ok) throw new Error(r.error || '登入失敗');
+    session.empId = r.empId;
+    session.name = r.name || r.empId;
+    sessionStorage.setItem('empSession', JSON.stringify(session));
+    enterMain();
+  } catch (ex) {
+    err.textContent = ex.message;
+    err.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '登 入';
+  }
+});
+
+function enterMain() {
+  document.getElementById('loginStage').classList.add('hidden');
+  document.getElementById('mainStage').classList.remove('hidden');
+  document.getElementById('userName').textContent = session.name;
+  document.getElementById('userEmpId').textContent = session.empId;
+  document.getElementById('welcomeName').textContent = session.name;
+  document.getElementById('userBadge').textContent = (session.name || '員').slice(0, 1);
+  loadMonths();
+}
+
+function logout() {
+  sessionStorage.removeItem('empSession');
+  session.empId = null; session.name = null;
+  document.getElementById('mainStage').classList.add('hidden');
+  document.getElementById('loginStage').classList.remove('hidden');
+  document.getElementById('payslipCard').classList.add('hidden');
+  document.getElementById('loginForm').reset();
+}
+
+// ====== 月份清單 ======
+async function loadMonths() {
+  const box = document.getElementById('monthList');
+  box.innerHTML = '<div class="loading">載入中</div>';
+  try {
+    const r = await callApi('getMyPayslipList', { empId: session.empId });
+    if (!r.ok) throw new Error(r.error);
+    if (!r.data || r.data.length === 0) {
+      box.innerHTML = '<div class="empty-state">目前尚無薪資資料</div>';
+      return;
+    }
+    box.innerHTML = '';
+    r.data.forEach((row, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'month-chip' + (idx === 0 ? ' active' : '');
+      chip.innerHTML = `${row.yearMonth} <small>實領 ${formatMoney(row.netPay)}</small>`;
+      chip.onclick = () => {
+        document.querySelectorAll('.month-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        loadPayslip(row.yearMonth);
+      };
+      box.appendChild(chip);
+    });
+    // 預設載入最新一筆
+    loadPayslip(r.data[0].yearMonth);
+  } catch (ex) {
+    box.innerHTML = '<div class="empty-state" style="color:var(--danger)">' + ex.message + '</div>';
+  }
+}
+
+// ====== 薪資單詳細 ======
+async function loadPayslip(yearMonth) {
+  const card = document.getElementById('payslipCard');
+  card.classList.remove('hidden');
+  document.getElementById('incomeRows').innerHTML = '<div class="loading">載入中</div>';
+  document.getElementById('deductRows').innerHTML = '';
+  try {
+    const r = await callApi('getMyPayslip', { empId: session.empId, yearMonth });
+    if (!r.ok) throw new Error(r.error);
+    renderPayslip(r.data);
+  } catch (ex) {
+    document.getElementById('incomeRows').innerHTML =
+      '<div class="empty-state" style="color:var(--danger)">' + ex.message + '</div>';
+  }
+}
+
+function renderPayslip(d) {
+  document.getElementById('psMonth').textContent = d.yearMonth + ' 薪資單';
+  document.getElementById('psName').textContent = d.name || session.name;
+  document.getElementById('psEmpId').textContent = '員編 ' + d.empId;
+
+  const income = [
+    ['基本薪資（時薪×210）', d.baseSalary],
+    ['國上加給', d.holidayPay],
+    ['休上加給', d.restDayPay],
+    ['加班費', d.overtimePay],
+    ['服務獎金（18–22週）', d.serviceBonus],
+    ['年資獎金', d.tenureBonus],
+    ['職位加給', d.positionBonus],
+    ['績效獎金', d.performanceBonus],
+    ['評論獎金', d.reviewBonus],
+    ['其他加項', d.otherAddition]
+  ];
+  const deduct = [
+    ['勞保', d.laborDeduction],
+    ['健保', d.healthDeduction],
+    ['遲到扣款', d.lateDeductionAmount],
+    ['商品扣款', d.productDeduction],
+    ['其他扣項', d.otherDeduction]
+  ];
+
+  const incBox = document.getElementById('incomeRows');
+  incBox.innerHTML = '';
+  income.forEach(([k, v]) => {
+    if (!v) return; // 0 不顯示
+    incBox.insertAdjacentHTML('beforeend',
+      `<div class="row"><span class="label">${k}</span><span class="value">${formatMoney(v)}</span></div>`);
+  });
+  if (!incBox.children.length) incBox.innerHTML = '<div class="row"><span class="label">無</span></div>';
+  incBox.insertAdjacentHTML('beforeend',
+    `<div class="row subtotal"><span>應支總計</span><span class="value">${formatMoney(d.totalIncome)}</span></div>`);
+
+  const dedBox = document.getElementById('deductRows');
+  dedBox.innerHTML = '';
+  deduct.forEach(([k, v]) => {
+    if (!v) return;
+    dedBox.insertAdjacentHTML('beforeend',
+      `<div class="row"><span class="label">${k}</span><span class="value">${formatMoney(v)}</span></div>`);
+  });
+  if (!dedBox.children.length) dedBox.innerHTML = '<div class="row"><span class="label">無</span></div>';
+  dedBox.insertAdjacentHTML('beforeend',
+    `<div class="row subtotal deduct"><span>應扣總計</span><span class="value">${formatMoney(d.totalDeduction)}</span></div>`);
+
+  document.getElementById('sumIncome').textContent = formatMoney(d.totalIncome);
+  document.getElementById('sumDeduct').textContent = formatMoney(d.totalDeduction);
+  document.getElementById('sumNet').textContent = formatMoney(d.netPay);
+  document.getElementById('psCash').textContent = formatMoney(d.cash);
+  document.getElementById('psTransfer').textContent = formatMoney(d.transfer);
+  document.getElementById('psCalcTime').textContent =
+    d.calculatedAt ? '計算於 ' + String(d.calculatedAt).replace('T', ' ').slice(0, 16) : '';
+}
+
+function formatMoney(n) {
+  const v = Number(n) || 0;
+  return '$' + v.toLocaleString('zh-Hant', { maximumFractionDigits: 0 });
+}
+
+// ====== 自動還原 session ======
+(function tryRestore() {
+  const raw = sessionStorage.getItem('empSession');
+  if (!raw) return;
+  try {
+    const s = JSON.parse(raw);
+    if (s && s.empId) {
+      session.empId = s.empId; session.name = s.name;
+      enterMain();
+    }
+  } catch (e) {}
+})();
+</script>
+
+</body>
+</html>
