@@ -422,19 +422,16 @@ function renderPayslip(d) {
     ['國上加給', d.holidayPay],
     ['休上加給', d.restDayPay],
     ['加班費', d.overtimePay],
-    ['服務獎金（18-22週）', d.serviceBonus],
-    ['年資獎金', d.tenureBonus],
-    ['職位加給', d.positionBonus],
+    ['服務獎金', d.serviceBonus],
     ['績效獎金', d.performanceBonus],
     ['評論獎金', d.reviewBonus],
+    ['年資獎金', d.tenureBonus],
     ['其他加項', d.otherAddition]
   ];
   const deduct = [
     ['勞保', d.laborDeduction],
     ['健保', d.healthDeduction],
-    ['遲到扣款', d.lateDeductionAmount],
-    ['商品扣款', d.productDeduction],
-    ['其他扣項', d.otherDeduction]
+    ['遲到扣款', d.lateDeductionAmount]
   ];
 
   const incBox = document.getElementById('incomeRows');
