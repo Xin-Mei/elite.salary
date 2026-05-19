@@ -417,21 +417,15 @@ function renderPayslip(d) {
   document.getElementById('psName').textContent = d.name || session.name;
   document.getElementById('psEmpId').textContent = '員編 ' + d.empId;
 
-  const income = [
-    ['基本薪資（時薪×210）', d.baseSalary],
-    ['國上加給', d.holidayPay],
-    ['休上加給', d.restDayPay],
-    ['加班費', d.overtimePay],
-    ['服務獎金', d.serviceBonus],
-    ['績效獎金', d.performanceBonus],
-    ['評論獎金', d.reviewBonus],
-    ['年資獎金', d.tenureBonus],
-    ['其他加項', d.otherAddition]
-  ];
+  const income = [['基本薪資', d.baseSalary]];
+  (d.columns || []).forEach(function (c) {
+    if (c && c.label) income.push([c.label, c.amount]);
+  });
+  income.push(['其他加項', d.otherAddition]);
   const deduct = [
     ['勞保', d.laborDeduction],
     ['健保', d.healthDeduction],
-    ['遲到扣款', d.lateDeductionAmount]
+    ['其他扣項', d.otherDeduction]
   ];
 
   const incBox = document.getElementById('incomeRows');
