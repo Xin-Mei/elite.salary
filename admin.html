@@ -191,12 +191,12 @@
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
           每筆「院區 × 職稱」可選擇<b>時薪</b>或<b>月薪</b>。<br>
           ・<b>院區</b>可填多個用逗號分隔（如 <code>三樹,桃園,龍潭</code>），代表這幾個院區的此職稱用同一組薪資設定；留空 = 適用所有院區<br>
-          ・<b>時薪</b>：基本薪資 = 時薪 × 該列的月基本工時(例如 53.35×210=11203.5)<br>
-          ・<b>月薪</b>：基本薪資 = 月薪金額（時薪/月基本工時 欄位可留空）
+          ・<b>時薪</b>：基本薪資 = 時薪 × <b>出勤時數</b>（出勤時數由考勤系統提供,目前留待整合）<br>
+          ・<b>月薪</b>：基本薪資 = 月薪金額（時薪欄位可留空）
         </p>
         <div class="table-wrap">
           <table id="salaryTable">
-            <thead><tr><th>院區</th><th>職稱</th><th>類型</th><th>時薪</th><th>月薪</th><th>月基本工時</th><th></th></tr></thead>
+            <thead><tr><th>院區</th><th>職稱</th><th>類型</th><th>時薪</th><th>月薪</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -276,7 +276,7 @@
     <div class="tab-panel hidden" id="panel-params">
       <div class="card">
         <div class="card-title"><span class="dot"></span> 系統參數</div>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">月基本工時請至「院區職稱薪資」分頁,依每個院區職稱個別設定。</p>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">勞健保比率設定。月基本工時待考勤系統整合後由出勤時數提供,不在此設定。</p>
         <div class="form-grid">
           <div class="form-field"><label>勞保員工自付比率</label><input id="pm_laborInsuranceEmpRate" type="number" step="0.0001"></div>
           <div class="form-field"><label>健保費率</label><input id="pm_healthInsuranceRate" type="number" step="0.0001"></div>
@@ -486,8 +486,7 @@ function renderEmpDetail(d, ym) {
                 '<input id="ef_hourlyRate" type="number" step="0.01" value="'+(Number(ov.hourlyRate)||0)+'">' +
                 '<div class="hint-text">院區職稱表預設時薪：'+(sal.defaultHourlyRate||0)+'，留 0 用預設，目前生效時薪：'+sal.hourlyRate+'</div>' +
               '</div>' +
-              '<div class="form-field"><label>月基本工時</label><input value="'+sal.baseHours+'" readonly></div>' +
-              '<div class="form-field"><label>基本薪資（生效）</label><input value="'+fmt(sal.baseSalary)+'" readonly></div>';
+              '<div class="form-field" style="grid-column:1/-1; background:#FFFBEB; padding:8px 12px; border-radius:8px; color:#92400E; font-size:12px;">⏱ 基本薪資 = 時薪 × <b>出勤時數</b>（出勤時數待考勤系統提供,目前基本薪資暫為 0）</div>';
   } else {
     salHtml = '<div class="form-field" style="grid-column:1/-1; color:var(--danger);">⚠ 尚未在「院區職稱薪資」分頁設定 ' + (basic.branch||'') + ' × ' + (basic.title||'') + ' 的薪資</div>';
   }
@@ -666,7 +665,7 @@ function renderSalary() {
   const tb=document.querySelector('#salaryTable tbody');
   tb.innerHTML='';
   if (!salaryList.length) {
-    tb.innerHTML='<tr><td colspan="7"><div class="empty-state">尚無資料,按右上「＋ 新增列」開始</div></td></tr>';
+    tb.innerHTML='<tr><td colspan="6"><div class="empty-state">尚無資料,按右上「＋ 新增列」開始</div></td></tr>';
     return;
   }
   salaryList.forEach((row,i)=>{
@@ -680,12 +679,11 @@ function renderSalary() {
       '</select></td>'+
       '<td><input class="tbl-input" type="number" step="0.01" value="'+(row.hourlyRate||0)+'" onchange="salaryList['+i+'].hourlyRate=Number(this.value)"></td>'+
       '<td><input class="tbl-input" type="number" value="'+(row.monthlySalary||0)+'" onchange="salaryList['+i+'].monthlySalary=Number(this.value)"></td>'+
-      '<td><input class="tbl-input" type="number" value="'+(row.baseHours||210)+'" onchange="salaryList['+i+'].baseHours=Number(this.value)"></td>'+
       '<td><button class="btn-danger" onclick="salaryList.splice('+i+',1); renderSalary();">刪除</button></td>';
     tb.appendChild(tr);
   });
 }
-function addSalaryRow() { salaryList.push({ branchesRaw:'', title:'櫃台', type:'時薪', hourlyRate:0, monthlySalary:0, baseHours:210 }); renderSalary(); }
+function addSalaryRow() { salaryList.push({ branchesRaw:'', title:'櫃台', type:'時薪', hourlyRate:0, monthlySalary:0 }); renderSalary(); }
 async function saveSalary() {
   try {
     const r=await callApi('saveSalaryTable',{ data:salaryList });
