@@ -190,6 +190,7 @@
         </div>
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
           每筆「院區 × 職稱」可選擇<b>時薪</b>或<b>月薪</b>。<br>
+          ・<b>院區</b>可填多個用逗號分隔（如 <code>三樹,桃園,龍潭</code>），代表這幾個院區的此職稱用同一組薪資設定；留空 = 適用所有院區<br>
           ・<b>時薪</b>：基本薪資 = 時薪 × 該列的月基本工時(例如 53.35×210=11203.5)<br>
           ・<b>月薪</b>：基本薪資 = 月薪金額（時薪/月基本工時 欄位可留空）
         </p>
@@ -671,7 +672,7 @@ function renderSalary() {
   salaryList.forEach((row,i)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=
-      '<td><input class="tbl-input" type="text" value="'+escAttr(row.branch)+'" placeholder="三樹" onchange="salaryList['+i+'].branch=this.value"></td>'+
+      '<td><input class="tbl-input" type="text" value="'+escAttr(row.branchesRaw||row.branch||'')+'" placeholder="三樹 或 三樹,桃園,龍潭" style="min-width:200px;" onchange="salaryList['+i+'].branchesRaw=this.value"></td>'+
       '<td><input class="tbl-input" type="text" value="'+escAttr(row.title)+'" placeholder="櫃台" onchange="salaryList['+i+'].title=this.value"></td>'+
       '<td><select class="tbl-input" onchange="salaryList['+i+'].type=this.value">'+
         '<option value="時薪"'+(row.type==='時薪'?' selected':'')+'>時薪</option>'+
@@ -684,7 +685,7 @@ function renderSalary() {
     tb.appendChild(tr);
   });
 }
-function addSalaryRow() { salaryList.push({ branch:'', title:'櫃台', type:'時薪', hourlyRate:0, monthlySalary:0, baseHours:210 }); renderSalary(); }
+function addSalaryRow() { salaryList.push({ branchesRaw:'', title:'櫃台', type:'時薪', hourlyRate:0, monthlySalary:0, baseHours:210 }); renderSalary(); }
 async function saveSalary() {
   try {
     const r=await callApi('saveSalaryTable',{ data:salaryList });
