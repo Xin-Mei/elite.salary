@@ -6,37 +6,22 @@
 <title>金鶯診所 — 薪資系統管理後台</title>
 <style>
   :root {
-    --teal: #4A9B9B;
-    --teal-dark: #357575;
-    --teal-light: #6FB8B8;
-    --teal-50: #E8F3F3;
-    --cream: #F8EFDD;
-    --cream-light: #FDF7E9;
-    --pink: #F8CBC0;
-    --pink-soft: #FCE5DF;
-    --text: #2D3748;
-    --text-muted: #6B7280;
-    --border: #E5E7EB;
-    --danger: #DC2626;
-    --success: #059669;
+    --teal: #4A9B9B; --teal-dark: #357575; --teal-light: #6FB8B8; --teal-50: #E8F3F3;
+    --cream: #F8EFDD; --cream-light: #FDF7E9;
+    --pink: #F8CBC0; --pink-soft: #FCE5DF;
+    --text: #2D3748; --text-muted: #6B7280; --border: #E5E7EB;
+    --danger: #DC2626; --success: #059669;
     --shadow: 0 4px 16px rgba(74, 155, 155, 0.08);
     --shadow-lg: 0 10px 30px rgba(74, 155, 155, 0.15);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
-  body {
-    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-    color: var(--text);
-    background: linear-gradient(135deg, var(--cream) 0%, var(--cream-light) 45%, var(--teal-50) 100%);
-    min-height: 100vh; line-height: 1.6;
-  }
+  body { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; color: var(--text); background: linear-gradient(135deg, var(--cream) 0%, var(--cream-light) 45%, var(--teal-50) 100%); min-height: 100vh; line-height: 1.6; }
   .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
-
   .logo { width: 48px; height: 48px; flex-shrink: 0; object-fit: cover; border-radius: 50%; display: block; background: var(--teal); }
   .logo-text { display: flex; flex-direction: column; }
   .logo-title { font-size: 20px; font-weight: 700; color: var(--teal-dark); letter-spacing: 2px; }
   .logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
-
   .login-stage { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .login-card { background: white; border-radius: 24px; padding: 48px 40px; box-shadow: var(--shadow-lg); width: 100%; max-width: 440px; text-align: center; }
   .login-card .logo { width: 80px; height: 80px; margin: 0 auto 16px; }
@@ -45,16 +30,10 @@
   .login-card .system-name { font-size: 14px; color: white; background: var(--teal); padding: 4px 14px; border-radius: 999px; display: inline-block; margin: 14px 0 30px; letter-spacing: 2px; }
   .form-field { margin-bottom: 16px; text-align: left; }
   .form-field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-  .form-field input, .form-field select, .form-field textarea {
-    width: 100%; padding: 11px 14px; border: 1px solid var(--border);
-    border-radius: 10px; font-size: 15px; background: #FAFAFA;
-    font-family: inherit;
-  }
-  .form-field textarea { resize: vertical; min-height: 60px; }
-  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-    outline: none; border-color: var(--teal); background: white; box-shadow: 0 0 0 3px var(--teal-50);
-  }
+  .form-field input, .form-field select, .form-field textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; background: #FAFAFA; font-family: inherit; }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus { outline: none; border-color: var(--teal); background: white; box-shadow: 0 0 0 3px var(--teal-50); }
   .form-field input:read-only { background: #F1F5F9; color: var(--text-muted); cursor: default; }
+  .hint-text { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
   .btn-primary { background: var(--teal); color: white; border: none; padding: 11px 24px; border-radius: 10px; font-size: 14px; letter-spacing: 2px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
   .btn-primary:hover { background: var(--teal-dark); }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -63,38 +42,33 @@
   .btn-ghost:hover { color: var(--teal); border-color: var(--teal); }
   .btn-danger { background: white; color: var(--danger); border: 1px solid #FEE2E2; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; }
   .btn-danger:hover { background: #FEF2F2; }
+  .btn-suggest { background: var(--cream-light); color: var(--teal-dark); border: 1px solid var(--cream); padding: 3px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; margin-left: 4px; }
+  .btn-suggest:hover { background: var(--cream); }
   .error-msg { background: #FEF2F2; color: var(--danger); padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-top: 14px; display: none; }
-
   .topbar { background: white; border-radius: 16px; padding: 16px 22px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
   .topbar-left { display: flex; align-items: center; gap: 14px; }
   .role-badge { background: var(--teal); color: white; padding: 4px 12px; border-radius: 999px; font-size: 11px; letter-spacing: 1px; }
   .btn-logout { background: white; border: 1px solid var(--border); border-radius: 999px; padding: 7px 16px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
   .btn-logout:hover { color: var(--teal-dark); border-color: var(--teal); }
-
   .nav-tabs { background: white; border-radius: 16px; padding: 8px; box-shadow: var(--shadow); margin-bottom: 20px; display: flex; gap: 4px; overflow-x: auto; }
   .tab { padding: 10px 18px; border-radius: 10px; font-size: 14px; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: all 0.2s; }
   .tab:hover { color: var(--teal-dark); background: var(--cream-light); }
   .tab.active { background: var(--teal); color: white; }
-
   .card { background: white; border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); margin-bottom: 16px; }
   .card-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
   .card-title .dot { width: 6px; height: 18px; background: var(--teal); border-radius: 3px; }
   .card-title .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
-
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
   th { background: var(--cream-light); font-weight: 600; font-size: 13px; color: var(--text-muted); }
   tr:hover { background: var(--teal-50); }
   .table-wrap { overflow-x: auto; }
-
   .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px 16px; }
   .form-grid .form-field { margin-bottom: 0; }
   .form-actions { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
-
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; background: var(--cream-light); color: var(--text-muted); }
   .pill.success { background: #ECFDF5; color: var(--success); }
   .pill.muted { background: #F3F4F6; color: var(--text-muted); }
-
   .hidden { display: none !important; }
   .filter-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 16px; }
   .filter-row .form-field { margin-bottom: 0; min-width: 150px; flex: 0 1 auto; }
@@ -102,13 +76,11 @@
   .loading { text-align: center; padding: 24px; color: var(--text-muted); }
   .loading::before { content: ""; display: inline-block; width: 16px; height: 16px; border: 2px solid var(--teal-50); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .branch-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
   .branch-tab { padding: 7px 14px; border-radius: 8px; font-size: 13px; background: var(--cream-light); color: var(--text-muted); cursor: pointer; border: 1px solid transparent; }
   .branch-tab:hover { color: var(--teal-dark); }
   .branch-tab.active { background: var(--teal); color: white; }
   .branch-tab .count { font-size: 11px; opacity: 0.8; margin-left: 4px; }
-
   .emp-layout { display: grid; grid-template-columns: 320px 1fr; gap: 16px; }
   @media (max-width: 900px) { .emp-layout { grid-template-columns: 1fr; } }
   .emp-list { background: white; border-radius: 14px; box-shadow: var(--shadow); padding: 6px; max-height: 70vh; overflow-y: auto; }
@@ -121,9 +93,8 @@
   .emp-item .info .name { font-weight: 600; font-size: 14px; }
   .emp-item .info .meta { font-size: 11px; opacity: 0.7; }
   .section-block { background: white; border-radius: 14px; padding: 18px 22px; box-shadow: var(--shadow); margin-bottom: 12px; }
-  .section-block h3 { font-size: 14px; font-weight: 700; color: var(--teal-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .section-block h3 { font-size: 14px; font-weight: 700; color: var(--teal-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .section-block h3 .badge { background: var(--cream-light); color: var(--text-muted); padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 400; }
-
   .review-list { display: flex; flex-direction: column; gap: 8px; }
   .review-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--cream-light); border-radius: 10px; font-size: 13px; }
   .review-item .seq { width: 26px; height: 26px; border-radius: 50%; background: var(--teal); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; flex-shrink: 0; }
@@ -131,8 +102,6 @@
   .review-item .content { flex: 1; }
   .review-item .amount { font-weight: 600; color: var(--teal-dark); }
   .review-add { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: end; }
-  .review-add .form-field { margin-bottom: 0; }
-
   .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 720px) { .calc-grid { grid-template-columns: 1fr; } }
   .calc-box { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
@@ -144,7 +113,6 @@
   .calc-net .item .label { font-size: 11px; color: var(--text-muted); }
   .calc-net .item .big { font-size: 22px; font-weight: 700; color: var(--teal-dark); }
   .calc-net .item .big.net { color: #B45309; }
-
   .toast { position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 12px 20px; border-radius: 10px; background: white; box-shadow: var(--shadow-lg); font-size: 14px; border-left: 4px solid var(--teal); animation: slideIn 0.3s; }
   .toast.error { border-left-color: var(--danger); }
   .toast.success { border-left-color: var(--success); }
@@ -160,14 +128,8 @@
     <div class="subtitle">Elite Clinic</div>
     <div class="system-name">薪資系統 · 管理後台</div>
     <form id="loginForm" autocomplete="off">
-      <div class="form-field">
-        <label>管理員帳號</label>
-        <input type="text" id="usernameInput" required placeholder="請輸入管理員帳號">
-      </div>
-      <div class="form-field">
-        <label>密碼</label>
-        <input type="password" id="passwordInput" required placeholder="請輸入密碼">
-      </div>
+      <div class="form-field"><label>管理員帳號</label><input type="text" id="usernameInput" required placeholder="請輸入管理員帳號"></div>
+      <div class="form-field"><label>密碼</label><input type="password" id="passwordInput" required placeholder="請輸入密碼"></div>
       <button type="submit" class="btn-primary block" id="loginBtn">登 入</button>
       <div class="error-msg" id="loginError"></div>
     </form>
@@ -193,10 +155,11 @@
 
     <div class="nav-tabs">
       <div class="tab active" data-tab="emp">員工資料</div>
+      <div class="tab" data-tab="rate">院區職稱時薪</div>
       <div class="tab" data-tab="branch">院區看診人數</div>
       <div class="tab" data-tab="perf">績效獎金級距</div>
-      <div class="tab" data-tab="params">系統參數</div>
       <div class="tab" data-tab="tenure">年資對照</div>
+      <div class="tab" data-tab="params">系統參數</div>
       <div class="tab" data-tab="admin">管理員帳密</div>
     </div>
 
@@ -213,10 +176,27 @@
         <div class="branch-tabs" id="branchTabs"><div class="loading">載入中</div></div>
         <div class="emp-layout">
           <div class="emp-list" id="empList"><div class="empty-state">請先選擇院區</div></div>
-          <div id="empDetail">
-            <div class="section-block"><div class="empty-state">請從左側選擇員工</div></div>
-          </div>
+          <div id="empDetail"><div class="section-block"><div class="empty-state">請從左側選擇員工</div></div></div>
         </div>
+      </div>
+    </div>
+
+    <div class="tab-panel hidden" id="panel-rate">
+      <div class="card">
+        <div class="card-title">
+          <span class="dot"></span> 院區職稱時薪
+          <div class="actions"><button class="btn-ghost" onclick="addRateRow()">＋ 新增列</button></div>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
+          設定每個「院區 × 職稱」的預設時薪。員工若沒填個別時薪覆寫,就用這裡的對照值。
+        </p>
+        <div class="table-wrap">
+          <table id="rateTable">
+            <thead><tr><th>院區</th><th>職稱</th><th>時薪</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="form-actions"><button class="btn-primary" onclick="saveRateTable()">儲存</button></div>
       </div>
     </div>
 
@@ -231,9 +211,7 @@
         <div class="form-grid">
           <div class="form-field"><label>看診人數</label><input id="bm_count" type="number" value="0"></div>
         </div>
-        <div class="form-actions">
-          <button class="btn-primary" onclick="saveBranchMonth()">儲存</button>
-        </div>
+        <div class="form-actions"><button class="btn-primary" onclick="saveBranchMonth()">儲存</button></div>
       </div>
     </div>
 
@@ -244,37 +222,15 @@
           <div class="actions"><button class="btn-ghost" onclick="addPerfRow()">＋ 新增級距</button></div>
         </div>
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
-          依「院區當月看診人數」對照給予獎金。例：4000-5999 人對應 2000 元。可自由增減級距。
+          依「院區當月看診人數」對照給予獎金。<b>適用職稱</b>欄位填多個用逗號分隔(如 <code>櫃台,藥助</code>)。
         </p>
         <div class="table-wrap">
           <table id="perfTable">
-            <thead><tr><th>下限人數</th><th>上限人數</th><th>獎金金額</th><th></th></tr></thead>
+            <thead><tr><th>適用職稱</th><th>下限人數</th><th>上限人數</th><th>獎金金額</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
         <div class="form-actions"><button class="btn-primary" onclick="savePerf()">儲存級距</button></div>
-      </div>
-    </div>
-
-    <div class="tab-panel hidden" id="panel-params">
-      <div class="card">
-        <div class="card-title"><span class="dot"></span> 系統參數</div>
-        <div class="form-grid">
-          <div class="form-field"><label>月基本工時</label><input id="pm_baseHours" type="number"></div>
-          <div class="form-field"><label>加班倍率1（8-10小時）</label><input id="pm_otRate1" type="number" step="0.01"></div>
-          <div class="form-field"><label>加班倍率2（&gt;10小時）</label><input id="pm_otRate2" type="number" step="0.01"></div>
-          <div class="form-field"><label>休上倍率分子</label><input id="pm_restNumerator" type="number"></div>
-          <div class="form-field"><label>休上倍率分母</label><input id="pm_restDenominator" type="number"></div>
-          <div class="form-field"><label>國上倍率</label><input id="pm_holidayMultiplier" type="number" step="0.01"></div>
-          <div class="form-field"><label>勞保員工自付比率</label><input id="pm_laborInsuranceEmpRate" type="number" step="0.0001"></div>
-          <div class="form-field"><label>健保費率</label><input id="pm_healthInsuranceRate" type="number" step="0.0001"></div>
-          <div class="form-field"><label>健保員工自付比率</label><input id="pm_healthInsuranceEmpRate" type="number" step="0.01"></div>
-          <div class="form-field"><label>遲到單次扣款</label><input id="pm_lateDeduction" type="number"></div>
-        </div>
-        <div class="form-actions">
-          <button class="btn-primary" onclick="saveParams()">儲存參數</button>
-          <button class="btn-ghost" onclick="loadParams()">重新載入</button>
-        </div>
       </div>
     </div>
 
@@ -284,13 +240,36 @@
           <span class="dot"></span> 年資對照表
           <div class="actions"><button class="btn-ghost" onclick="addTenureRow()">＋ 新增列</button></div>
         </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
+          每個職稱可以有自己的年資對照規則。系統會找「員工年資 ≥ 滿年數」中最大的一筆,給予對應的獎金。
+        </p>
         <div class="table-wrap">
           <table id="tenureTable">
-            <thead><tr><th style="width:40%">滿年數</th><th style="width:40%">年資獎金</th><th></th></tr></thead>
+            <thead><tr><th>職稱</th><th>滿年數</th><th>年資獎金</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
         <div class="form-actions"><button class="btn-primary" onclick="saveTenure()">儲存對照表</button></div>
+      </div>
+    </div>
+
+    <div class="tab-panel hidden" id="panel-params">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> 系統參數</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>月基本工時</label>
+            <input id="pm_baseHours" type="number">
+            <div class="hint-text">基本薪資 = 時薪 × 此值(之後出勤系統接入後改為實際出勤時數)</div>
+          </div>
+          <div class="form-field"><label>勞保員工自付比率</label><input id="pm_laborInsuranceEmpRate" type="number" step="0.0001"></div>
+          <div class="form-field"><label>健保費率</label><input id="pm_healthInsuranceRate" type="number" step="0.0001"></div>
+          <div class="form-field"><label>健保員工自付比率</label><input id="pm_healthInsuranceEmpRate" type="number" step="0.01"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveParams()">儲存參數</button>
+          <button class="btn-ghost" onclick="loadParams()">重新載入</button>
+        </div>
       </div>
     </div>
 
@@ -321,21 +300,21 @@ let employeesByBranch = {};
 let branches = [];
 let currentBranch = null;
 let currentEmpId = null;
+let currentDetail = null;
 let perfList = [];
 let tenureList = [];
+let rateList = [];
 
 async function callApi(action, payload) {
   const body = Object.assign({ action }, payload || {});
   const res = await fetch(GAS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(body),
-    redirect: 'follow'
+    body: JSON.stringify(body), redirect: 'follow'
   });
   if (!res.ok) throw new Error('網路錯誤 ' + res.status);
   return await res.json();
 }
-
 function toast(msg, type) {
   const box = document.getElementById('toastBox');
   const el = document.createElement('div');
@@ -344,16 +323,10 @@ function toast(msg, type) {
   box.appendChild(el);
   setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 2500);
 }
-
-function fmt(n) { return '$' + (Number(n) || 0).toLocaleString(); }
-function todayYM() {
-  const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-}
-function todayDate() {
-  const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
+function fmt(n) { return '$' + (Number(n)||0).toLocaleString(); }
+function todayYM() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+function todayDate() { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function escAttr(s) { return String(s||'').replace(/"/g,'&quot;'); }
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -361,8 +334,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const p = document.getElementById('passwordInput').value;
   const btn = document.getElementById('loginBtn');
   const err = document.getElementById('loginError');
-  err.style.display = 'none';
-  err.style.color = ''; err.style.background = '';
+  err.style.display = 'none'; err.style.color = ''; err.style.background = '';
   btn.disabled = true; btn.textContent = '登入中…';
   try {
     if (!GAS_URL) throw new Error('尚未設定 GAS_URL');
@@ -370,15 +342,13 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     if (r.ok) {
       admin.username = r.username;
       sessionStorage.setItem('adminSession', JSON.stringify(admin));
-      enterMain();
-      return;
+      enterMain(); return;
     }
     const r2 = await callApi('employeeLogin', { empId: u, password: p });
     if (r2.ok) {
       err.innerHTML = '偵測到您是員工身份，2 秒後將自動轉至 <b>員工查詢前台</b>…';
       err.style.color = '#059669'; err.style.background = '#ECFDF5';
-      err.style.display = 'block';
-      btn.textContent = '轉跳中…';
+      err.style.display = 'block'; btn.textContent = '轉跳中…';
       setTimeout(() => { window.location.href = FRONTEND_URL; }, 2000);
       return;
     }
@@ -396,12 +366,8 @@ function enterMain() {
   document.getElementById('ad_username').value = admin.username;
   document.getElementById('empGlobalYM').value = todayYM();
   document.getElementById('bm_ym').value = todayYM();
-  loadEmployeesByBranch();
-  loadParams();
-  loadTenure();
-  loadPerf();
+  loadEmployeesByBranch(); loadParams(); loadTenure(); loadPerf(); loadRate();
 }
-
 function logout() {
   sessionStorage.removeItem('adminSession');
   admin.username = null;
@@ -409,7 +375,6 @@ function logout() {
   document.getElementById('loginStage').classList.remove('hidden');
   document.getElementById('loginForm').reset();
 }
-
 document.querySelectorAll('.tab').forEach(tab => {
   tab.onclick = () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -429,8 +394,7 @@ async function loadEmployeesByBranch() {
     branches = Object.keys(employeesByBranch);
     renderBranchTabs();
     const sel = document.getElementById('bm_branch');
-    sel.innerHTML = '<option value="">— 請選擇 —</option>' +
-      branches.map(b => '<option value="' + b + '">' + b + '</option>').join('');
+    sel.innerHTML = '<option value="">— 請選擇 —</option>' + branches.map(b => '<option value="'+b+'">'+b+'</option>').join('');
     if (branches.length > 0) {
       if (!currentBranch || branches.indexOf(currentBranch) === -1) currentBranch = branches[0];
       renderEmpList();
@@ -441,7 +405,6 @@ async function loadEmployeesByBranch() {
     box.innerHTML = '<div class="empty-state" style="color:var(--danger)">' + ex.message + '</div>';
   }
 }
-
 function renderBranchTabs() {
   const box = document.getElementById('branchTabs');
   box.innerHTML = '';
@@ -453,7 +416,6 @@ function renderBranchTabs() {
     box.appendChild(t);
   });
 }
-
 function renderEmpList() {
   const box = document.getElementById('empList');
   if (!currentBranch) { box.innerHTML = '<div class="empty-state">請先選擇院區</div>'; return; }
@@ -465,111 +427,111 @@ function renderEmpList() {
     item.className = 'emp-item' + (e.empId === currentEmpId ? ' active' : '');
     const initial = (e.name || e.empId).slice(0, 1);
     item.innerHTML =
-      '<div class="avatar">' + initial + '</div>' +
+      '<div class="avatar">'+initial+'</div>' +
       '<div class="info">' +
-        '<div class="name">' + e.name + ' <span style="font-size:11px; opacity:0.7;">' + e.empId + '</span></div>' +
-        '<div class="meta">' + (e.title || '') + (e.active ? '' : ' · 停用') + '</div>' +
+        '<div class="name">'+e.name+' <span style="font-size:11px; opacity:0.7;">'+e.empId+'</span></div>' +
+        '<div class="meta">'+(e.title||'')+(e.active?'':' · 停用')+'</div>' +
       '</div>';
     item.onclick = () => { currentEmpId = e.empId; renderEmpList(); loadEmpDetail(); };
     box.appendChild(item);
   });
 }
-
 function resetEmpDetail() {
   document.getElementById('empDetail').innerHTML = '<div class="section-block"><div class="empty-state">請從左側選擇員工</div></div>';
 }
-
 async function loadEmpDetail() {
   if (!currentEmpId) return;
   const ym = document.getElementById('empGlobalYM').value || todayYM();
-  const detailBox = document.getElementById('empDetail');
-  detailBox.innerHTML = '<div class="section-block"><div class="loading">載入中</div></div>';
+  const box = document.getElementById('empDetail');
+  box.innerHTML = '<div class="section-block"><div class="loading">載入中</div></div>';
   try {
     const r = await callApi('getEmployeeDetail', { empId: currentEmpId, yearMonth: ym });
     if (!r.ok) throw new Error(r.error);
+    currentDetail = r.data;
     renderEmpDetail(r.data, ym);
   } catch (ex) {
-    detailBox.innerHTML = '<div class="section-block"><div class="empty-state" style="color:var(--danger)">' + ex.message + '</div></div>';
+    box.innerHTML = '<div class="section-block"><div class="empty-state" style="color:var(--danger)">' + ex.message + '</div></div>';
   }
 }
-
-document.getElementById('empGlobalYM').addEventListener('change', () => {
-  if (currentEmpId) loadEmpDetail();
-});
+document.getElementById('empGlobalYM').addEventListener('change', () => { if (currentEmpId) loadEmpDetail(); });
 
 function renderEmpDetail(d, ym) {
   const basic = d.basic;
   const ov = d.override || {};
-  const h = d.hours || {};
-  const v = d.variable || {};
   const reviews = d.reviews || [];
-  const reviewTotal = reviews.reduce((s, r) => s + (Number(r.amount) || 0), 0);
+  const reviewTotal = reviews.reduce((s, r) => s + (Number(r.amount)||0), 0);
+  const cols = d.titleColumns || [];
 
-  const box = document.getElementById('empDetail');
-  box.innerHTML =
+  const fixedFieldsHtml = cols.map((c) => {
+    const sug = (c.suggested !== null && c.suggested !== undefined) ? c.suggested : null;
+    const sugHtml = (sug !== null)
+      ? '<button type="button" class="btn-suggest" onclick="document.getElementById(\'tc_'+c.key+'\').value=' + sug + '">建議: '+fmt(sug)+'</button>'
+      : '';
+    return '<div class="form-field">' +
+      '<label>'+c.label+' '+sugHtml+'</label>' +
+      '<input id="tc_'+c.key+'" type="number" value="'+(c.amount||0)+'">' +
+    '</div>';
+  }).join('');
+
+  const noCols = cols.length === 0
+    ? '<p style="font-size:12px; color:var(--text-muted);">⚠ 「'+basic.title+'」職稱還沒設定固定欄位定義,可在 gas-code.gs 的 getTitleColumnsDef 函式中新增。</p>'
+    : '';
+
+  document.getElementById('empDetail').innerHTML =
     '<div class="section-block">' +
       '<h3>基本資料 <span class="badge">來自驗證 Sheet · 唯讀</span></h3>' +
       '<div class="form-grid">' +
-        '<div class="form-field"><label>員工編號</label><input value="' + basic.empId + '" readonly></div>' +
-        '<div class="form-field"><label>姓名</label><input value="' + (basic.name || '') + '" readonly></div>' +
-        '<div class="form-field"><label>院區</label><input value="' + (basic.branch || '') + '" readonly></div>' +
-        '<div class="form-field"><label>職稱</label><input value="' + (basic.title || '') + '" readonly></div>' +
-        '<div class="form-field"><label>到職日</label><input value="' + (basic.hireDate || '') + '" readonly></div>' +
-        '<div class="form-field"><label>在職狀態</label><input value="' + (basic.active ? '在職' : '停用') + '" readonly></div>' +
+        '<div class="form-field"><label>員工編號</label><input value="'+basic.empId+'" readonly></div>' +
+        '<div class="form-field"><label>姓名</label><input value="'+(basic.name||'')+'" readonly></div>' +
+        '<div class="form-field"><label>院區</label><input value="'+(basic.branch||'')+'" readonly></div>' +
+        '<div class="form-field"><label>職稱</label><input value="'+(basic.title||'')+'" readonly></div>' +
+        '<div class="form-field"><label>到職日</label><input value="'+(basic.hireDate||'')+'" readonly></div>' +
+        '<div class="form-field"><label>在職狀態</label><input value="'+(basic.active?'在職':'停用')+'" readonly></div>' +
       '</div>' +
     '</div>' +
 
     '<div class="section-block">' +
       '<h3>個別設定 <span class="badge">跨月份共用</span></h3>' +
       '<div class="form-grid">' +
-        '<div class="form-field"><label>時薪</label><input id="ef_hourlyRate" type="number" step="0.01" value="' + (ov.hourlyRate || 0) + '"></div>' +
-        '<div class="form-field"><label>勞保投保薪資</label><input id="ef_laborInsuranceSalary" type="number" value="' + (ov.laborInsuranceSalary || 0) + '"></div>' +
-        '<div class="form-field"><label>健保勞退投保薪資</label><input id="ef_healthInsuranceSalary" type="number" value="' + (ov.healthInsuranceSalary || 0) + '"></div>' +
-        '<div class="form-field"><label>健保眷屬數</label><input id="ef_dependents" type="number" min="0" value="' + (ov.dependents || 0) + '"></div>' +
-        '<div class="form-field"><label>服務獎金日薪（元/日）</label><input id="ef_serviceBonusDaily" type="number" value="' + (ov.serviceBonusDaily || 0) + '"></div>' +
+        '<div class="form-field">' +
+          '<label>時薪覆寫</label>' +
+          '<input id="ef_hourlyRate" type="number" step="0.01" value="'+(Number(ov.hourlyRate)||0)+'">' +
+          '<div class="hint-text">院區職稱表預設：'+fmt(d.defaultHourlyRate)+'，留 0 表示用預設值，目前生效：'+fmt(d.hourlyRate)+'</div>' +
+        '</div>' +
+        '<div class="form-field"><label>勞保投保薪資</label><input id="ef_laborInsuranceSalary" type="number" value="'+(ov.laborInsuranceSalary||0)+'"></div>' +
+        '<div class="form-field"><label>健保勞退投保薪資</label><input id="ef_healthInsuranceSalary" type="number" value="'+(ov.healthInsuranceSalary||0)+'"></div>' +
+        '<div class="form-field"><label>健保眷屬數</label><input id="ef_dependents" type="number" min="0" value="'+(ov.dependents||0)+'"></div>' +
       '</div>' +
       '<div class="form-actions"><button class="btn-primary" onclick="saveOverride()">儲存個別設定</button></div>' +
     '</div>' +
 
     '<div class="section-block">' +
-      '<h3>月度工時 <span class="badge">' + ym + '</span></h3>' +
-      '<div class="form-grid">' +
-        '<div class="form-field"><label>國上時數</label><input id="hr_holidayHours" type="number" step="0.1" value="' + (h.holidayHours || 0) + '"></div>' +
-        '<div class="form-field"><label>休上天數</label><input id="hr_restDays" type="number" step="0.1" value="' + (h.restDays || 0) + '"></div>' +
-        '<div class="form-field"><label>加班 1.34 時數</label><input id="hr_overtime134" type="number" step="0.01" value="' + (h.overtime134 || 0) + '"></div>' +
-        '<div class="form-field"><label>加班 1.67 時數</label><input id="hr_overtime167" type="number" step="0.01" value="' + (h.overtime167 || 0) + '"></div>' +
-        '<div class="form-field"><label>本月遲到</label><input id="hr_lateCount" type="number" value="' + (h.lateCount || 0) + '"></div>' +
-        '<div class="form-field"><label>累計遲到</label><input id="hr_lateAccum" type="number" value="' + (h.lateAccum || 0) + '"></div>' +
-      '</div>' +
-      '<div class="form-actions"><button class="btn-primary" onclick="saveHours()">儲存月度工時</button></div>' +
-    '</div>' +
-
-    '<div class="section-block">' +
-      '<h3>月度變動 <span class="badge">' + ym + '</span></h3>' +
-      '<div class="form-grid">' +
-        '<div class="form-field"><label>其他加項</label><input id="vr_otherAddition" type="number" value="' + (v.otherAddition || 0) + '"></div>' +
-        '<div class="form-field" style="grid-column:1/-1"><label>備註</label><input id="vr_note" value="' + (v.note || '').replace(/"/g,'&quot;') + '"></div>' +
+      '<h3>月度變動 <span class="badge">'+ym+'</span> <span class="badge">名稱依月份奇偶輪替</span></h3>' +
+      noCols +
+      '<div class="form-grid">' + fixedFieldsHtml +
+        '<div class="form-field"><label>其他加項</label><input id="vr_otherAddition" type="number" value="'+(d.otherAddition||0)+'"></div>' +
+        '<div class="form-field"><label>其他扣項</label><input id="vr_otherDeduction" type="number" value="'+(d.otherDeduction||0)+'"></div>' +
+        '<div class="form-field" style="grid-column:1/-1"><label>備註</label><input id="vr_note" value="'+escAttr(d.note||'')+'"></div>' +
       '</div>' +
       '<div class="form-actions"><button class="btn-primary" onclick="saveVar()">儲存月度變動</button></div>' +
     '</div>' +
 
     '<div class="section-block">' +
-      '<h3>評論紀錄 <span class="badge">' + ym + ' · 共 ' + reviews.length + '/5 則，獎金 ' + fmt(reviewTotal) + '</span></h3>' +
-      '<p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">每月上限 5 則：第1則 $200, 第2則 $300, 第3-5則各 $400, 上限 $1,700。</p>' +
-      '<div class="review-list" id="reviewList">' + renderReviews(reviews) + '</div>' +
-      (reviews.length < 5 ?
-        '<div class="review-add">' +
-          '<div class="form-field" style="min-width:140px;"><label>評論日期</label><input id="newReviewDate" type="date" value="' + todayDate() + '"></div>' +
-          '<div class="form-field" style="flex:1; min-width:200px;"><label>評論內容</label><input id="newReviewContent" placeholder="顧客評論摘要…"></div>' +
-          '<button class="btn-primary" onclick="addReview()">＋ 新增評論</button>' +
-        '</div>'
-        : '<p style="font-size:12px; color:var(--danger);">本月已達 5 則上限</p>'
-      ) +
+      '<h3>評論紀錄 <span class="badge">'+ym+' · '+reviews.length+'/5 則，獎金 '+fmt(reviewTotal)+'</span></h3>' +
+      '<p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">每月上限 5 則：第1則 $200, 第2則 $300, 第3-5則各 $400, 上限 $1,700。獎金總額會帶入「'+(cols[2]?cols[2].label:'評論獎金')+'」欄位的建議值。</p>' +
+      '<div class="review-list">' + renderReviews(reviews) + '</div>' +
+      (reviews.length < 5
+        ? '<div class="review-add">' +
+            '<div class="form-field" style="min-width:140px;"><label>評論日期</label><input id="newReviewDate" type="date" value="'+todayDate()+'"></div>' +
+            '<div class="form-field" style="flex:1; min-width:200px;"><label>評論內容</label><input id="newReviewContent" placeholder="顧客評論摘要…"></div>' +
+            '<button class="btn-primary" onclick="addReview()">＋ 新增評論</button>' +
+          '</div>'
+        : '<p style="font-size:12px; color:var(--danger);">本月已達 5 則上限</p>') +
     '</div>' +
 
     '<div class="section-block">' +
-      '<h3>薪資試算 <span class="badge">' + ym + '</span></h3>' +
-      '<p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">院區當月看診人數：<b>' + d.branchPatientCount + '</b>（請先在「院區看診人數」分頁設定）</p>' +
+      '<h3>薪資試算 <span class="badge">'+ym+'</span></h3>' +
+      '<p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">院區當月看診人數：<b>'+d.branchPatientCount+'</b>(請先在「院區看診人數」分頁設定)</p>' +
       '<div class="form-actions"><button class="btn-primary" onclick="doCalculate()">計算薪資</button></div>' +
       '<div id="calcResult" style="margin-top:14px;"></div>' +
     '</div>';
@@ -579,62 +541,44 @@ function renderReviews(reviews) {
   if (!reviews.length) return '<div class="empty-state" style="padding:8px;">尚無評論紀錄</div>';
   return reviews.map(r =>
     '<div class="review-item">' +
-      '<div class="seq">' + r.sequence + '</div>' +
-      '<div class="date">' + (r.date || '') + '</div>' +
-      '<div class="content">' + (r.content || '') + '</div>' +
-      '<div class="amount">' + fmt(r.amount) + '</div>' +
-      '<button class="btn-danger" onclick="deleteReview(\'' + r.id + '\')">刪除</button>' +
+      '<div class="seq">'+r.sequence+'</div>' +
+      '<div class="date">'+(r.date||'')+'</div>' +
+      '<div class="content">'+(r.content||'')+'</div>' +
+      '<div class="amount">'+fmt(r.amount)+'</div>' +
+      '<button class="btn-danger" onclick="deleteReview(\''+r.id+'\')">刪除</button>' +
     '</div>'
   ).join('');
 }
 
 async function saveOverride() {
   const data = {
-    empId: currentEmpId,
-    branch: currentBranch,
+    empId: currentEmpId, branch: currentBranch,
     hourlyRate: Number(document.getElementById('ef_hourlyRate').value),
     laborInsuranceSalary: Number(document.getElementById('ef_laborInsuranceSalary').value),
     healthInsuranceSalary: Number(document.getElementById('ef_healthInsuranceSalary').value),
-    dependents: Number(document.getElementById('ef_dependents').value),
-    serviceBonusDaily: Number(document.getElementById('ef_serviceBonusDaily').value)
+    dependents: Number(document.getElementById('ef_dependents').value)
   };
   try {
     const r = await callApi('saveEmployeeOverride', { data });
     if (!r.ok) throw new Error(r.error);
     toast('個別設定已儲存', 'success');
-    loadEmployeesByBranch();
-  } catch (ex) { toast(ex.message, 'error'); }
-}
-
-async function saveHours() {
-  const ym = document.getElementById('empGlobalYM').value;
-  const data = {
-    empId: currentEmpId, yearMonth: ym,
-    holidayHours: Number(document.getElementById('hr_holidayHours').value),
-    restDays: Number(document.getElementById('hr_restDays').value),
-    overtime134: Number(document.getElementById('hr_overtime134').value),
-    overtime167: Number(document.getElementById('hr_overtime167').value),
-    lateCount: Number(document.getElementById('hr_lateCount').value),
-    lateAccum: Number(document.getElementById('hr_lateAccum').value)
-  };
-  try {
-    const r = await callApi('saveMonthlyHours', { data });
-    if (!r.ok) throw new Error(r.error);
-    toast('月度工時已儲存', 'success');
+    loadEmployeesByBranch(); loadEmpDetail();
   } catch (ex) { toast(ex.message, 'error'); }
 }
 
 async function saveVar() {
   const ym = document.getElementById('empGlobalYM').value;
-  const data = {
-    empId: currentEmpId, yearMonth: ym,
-    otherAddition: Number(document.getElementById('vr_otherAddition').value),
-    note: document.getElementById('vr_note').value
-  };
+  const cols = (currentDetail && currentDetail.titleColumns) || [];
+  const data = { empId: currentEmpId, yearMonth: ym };
+  cols.forEach(c => { data[c.key] = Number(document.getElementById('tc_'+c.key).value)||0; });
+  data.otherAddition = Number(document.getElementById('vr_otherAddition').value)||0;
+  data.otherDeduction = Number(document.getElementById('vr_otherDeduction').value)||0;
+  data.note = document.getElementById('vr_note').value;
   try {
     const r = await callApi('saveMonthlyVariable', { data });
     if (!r.ok) throw new Error(r.error);
     toast('月度變動已儲存', 'success');
+    loadEmpDetail();
   } catch (ex) { toast(ex.message, 'error'); }
 }
 
@@ -646,11 +590,10 @@ async function addReview() {
   try {
     const r = await callApi('addReviewRecord', { empId: currentEmpId, yearMonth: ym, date, content });
     if (!r.ok) throw new Error(r.error);
-    toast('已新增第 ' + r.data.sequence + ' 則, 金額 ' + fmt(r.data.amount), 'success');
+    toast('已新增第 '+r.data.sequence+' 則, 金額 '+fmt(r.data.amount), 'success');
     loadEmpDetail();
   } catch (ex) { toast(ex.message, 'error'); }
 }
-
 async function deleteReview(id) {
   if (!confirm('確定刪除這則評論？')) return;
   try {
@@ -660,7 +603,6 @@ async function deleteReview(id) {
     loadEmpDetail();
   } catch (ex) { toast(ex.message, 'error'); }
 }
-
 async function doCalculate() {
   const ym = document.getElementById('empGlobalYM').value;
   const out = document.getElementById('calcResult');
@@ -670,38 +612,36 @@ async function doCalculate() {
     if (!r.ok) throw new Error(r.error);
     renderCalc(r.data);
     toast('已計算並寫入薪資結果', 'success');
-  } catch (ex) { out.innerHTML = '<div class="empty-state" style="color:var(--danger)">' + ex.message + '</div>'; }
+  } catch (ex) { out.innerHTML = '<div class="empty-state" style="color:var(--danger)">'+ex.message+'</div>'; }
 }
-
 function renderCalc(d) {
   const out = document.getElementById('calcResult');
+  const pairs = [
+    [d.label1, d.col1], [d.label2, d.col2], [d.label3, d.col3],
+    [d.label4, d.col4], [d.label5, d.col5], [d.label6, d.col6]
+  ].filter(x => x[0]);
+  const colsRow = pairs.map(x => '<div class="calc-row"><span>'+x[0]+'</span><strong>'+fmt(x[1])+'</strong></div>').join('');
   out.innerHTML =
     '<div class="calc-grid">' +
       '<div class="calc-box">' +
         '<h4>應支項目</h4>' +
-        '<div class="calc-row"><span>基本薪資（' + d.hourlyRate + ' × ' + d.baseHours + '）</span><strong>' + fmt(d.baseSalary) + '</strong></div>' +
-        '<div class="calc-row"><span>國上加給</span><strong>' + fmt(d.holidayPay) + '</strong></div>' +
-        '<div class="calc-row"><span>休上加給</span><strong>' + fmt(d.restDayPay) + '</strong></div>' +
-        '<div class="calc-row"><span>加班費</span><strong>' + fmt(d.overtimePay) + '</strong></div>' +
-        '<div class="calc-row"><span>服務獎金（' + d.serviceBonusDaily + '/日 × ' + d.daysInMonth + '天）</span><strong>' + fmt(d.serviceBonus) + '</strong></div>' +
-        '<div class="calc-row"><span>績效獎金（' + d.patientCount + ' 人）</span><strong>' + fmt(d.performanceBonus) + '</strong></div>' +
-        '<div class="calc-row"><span>評論獎金（' + d.reviewCount + ' 則）</span><strong>' + fmt(d.reviewBonus) + '</strong></div>' +
-        '<div class="calc-row"><span>年資獎金</span><strong>' + fmt(d.tenureBonus) + '</strong></div>' +
-        '<div class="calc-row"><span>其他加項</span><strong>' + fmt(d.otherAddition) + '</strong></div>' +
-        '<div class="calc-row" style="border-top:1px solid var(--border); margin-top:6px; padding-top:6px;"><span><b>應支總計</b></span><strong>' + fmt(d.totalIncome) + '</strong></div>' +
+        '<div class="calc-row"><span>基本薪資（時薪 '+d.hourlyRate+' × '+d.baseHours+'）</span><strong>'+fmt(d.baseSalary)+'</strong></div>' +
+        colsRow +
+        '<div class="calc-row"><span>其他加項</span><strong>'+fmt(d.otherAddition)+'</strong></div>' +
+        '<div class="calc-row" style="border-top:1px solid var(--border); margin-top:6px; padding-top:6px;"><span><b>應支總計</b></span><strong>'+fmt(d.totalIncome)+'</strong></div>' +
       '</div>' +
       '<div class="calc-box">' +
         '<h4>應扣項目</h4>' +
-        '<div class="calc-row"><span>勞保</span><strong>' + fmt(d.laborDeduction) + '</strong></div>' +
-        '<div class="calc-row"><span>健保（含眷屬 ' + d.dependents + '）</span><strong>' + fmt(d.healthDeduction) + '</strong></div>' +
-        '<div class="calc-row"><span>遲到扣款（' + d.lateCount + ' 次）</span><strong>' + fmt(d.lateDeductionAmount) + '</strong></div>' +
-        '<div class="calc-row" style="border-top:1px solid var(--border); margin-top:6px; padding-top:6px;"><span><b>應扣總計</b></span><strong>' + fmt(d.totalDeduction) + '</strong></div>' +
+        '<div class="calc-row"><span>勞保</span><strong>'+fmt(d.laborDeduction)+'</strong></div>' +
+        '<div class="calc-row"><span>健保（含眷屬 '+d.dependents+'）</span><strong>'+fmt(d.healthDeduction)+'</strong></div>' +
+        '<div class="calc-row"><span>其他扣項</span><strong>'+fmt(d.otherDeduction)+'</strong></div>' +
+        '<div class="calc-row" style="border-top:1px solid var(--border); margin-top:6px; padding-top:6px;"><span><b>應扣總計</b></span><strong>'+fmt(d.totalDeduction)+'</strong></div>' +
       '</div>' +
     '</div>' +
     '<div class="calc-net">' +
-      '<div class="item"><div class="label">實領金額</div><div class="big net">' + fmt(d.netPay) + '</div></div>' +
-      '<div class="item"><div class="label">現金</div><div class="big">' + fmt(d.cash) + '</div></div>' +
-      '<div class="item"><div class="label">轉帳（≤ ' + fmt(d.healthInsuranceSalary) + '）</div><div class="big">' + fmt(d.transfer) + '</div></div>' +
+      '<div class="item"><div class="label">實領金額</div><div class="big net">'+fmt(d.netPay)+'</div></div>' +
+      '<div class="item"><div class="label">現金</div><div class="big">'+fmt(d.cash)+'</div></div>' +
+      '<div class="item"><div class="label">轉帳（≤ '+fmt(d.healthInsuranceSalary)+'）</div><div class="big">'+fmt(d.transfer)+'</div></div>' +
     '</div>';
 }
 
@@ -718,11 +658,7 @@ async function loadBranchMonth() {
   } catch (ex) { toast(ex.message, 'error'); }
 }
 async function saveBranchMonth() {
-  const data = {
-    branch: document.getElementById('bm_branch').value,
-    yearMonth: document.getElementById('bm_ym').value,
-    patientCount: Number(document.getElementById('bm_count').value)
-  };
+  const data = { branch: document.getElementById('bm_branch').value, yearMonth: document.getElementById('bm_ym').value, patientCount: Number(document.getElementById('bm_count').value) };
   if (!data.branch || !data.yearMonth) { toast('請選擇院區與年月', 'error'); return; }
   try {
     const r = await callApi('saveBranchPatientCount', { data });
@@ -735,7 +671,10 @@ async function loadPerf() {
   try {
     const r = await callApi('getPerfBrackets');
     if (!r.ok) throw new Error(r.error);
-    perfList = r.data || [];
+    perfList = (r.data||[]).map(x => ({
+      titlesRaw: (Array.isArray(x.titles)?x.titles.join(','):(x.titlesRaw||'')),
+      lower: x.lower||0, upper: x.upper||0, bonus: x.bonus||0
+    }));
     renderPerf();
   } catch (ex) { toast(ex.message, 'error'); }
 }
@@ -744,56 +683,21 @@ function renderPerf() {
   tb.innerHTML = '';
   perfList.forEach((row, i) => {
     const tr = document.createElement('tr');
-    const cell = (val, key) => '<td><input type="number" value="' + val + '" style="width:140px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="perfList[' + i + '].' + key + '=Number(this.value)"></td>';
-    tr.innerHTML = cell(row.lower, 'lower') + cell(row.upper, 'upper') + cell(row.bonus, 'bonus') +
-      '<td><button class="btn-danger" onclick="perfList.splice(' + i + ',1); renderPerf();">刪除</button></td>';
+    tr.innerHTML =
+      '<td><input type="text" value="'+escAttr(row.titlesRaw)+'" placeholder="如：櫃台,藥助" style="width:180px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="perfList['+i+'].titlesRaw=this.value"></td>' +
+      '<td><input type="number" value="'+row.lower+'" style="width:120px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="perfList['+i+'].lower=Number(this.value)"></td>' +
+      '<td><input type="number" value="'+row.upper+'" style="width:120px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="perfList['+i+'].upper=Number(this.value)"></td>' +
+      '<td><input type="number" value="'+row.bonus+'" style="width:120px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="perfList['+i+'].bonus=Number(this.value)"></td>' +
+      '<td><button class="btn-danger" onclick="perfList.splice('+i+',1); renderPerf();">刪除</button></td>';
     tb.appendChild(tr);
   });
 }
-function addPerfRow() { perfList.push({ lower: 0, upper: 0, bonus: 0 }); renderPerf(); }
+function addPerfRow() { perfList.push({ titlesRaw:'', lower: 0, upper: 0, bonus: 0 }); renderPerf(); }
 async function savePerf() {
   try {
     const r = await callApi('savePerfBrackets', { data: perfList });
     if (!r.ok) throw new Error(r.error);
-    toast('級距已儲存', 'success');
-    loadPerf();
-  } catch (ex) { toast(ex.message, 'error'); }
-}
-
-async function loadParams() {
-  try {
-    const r = await callApi('getParams');
-    if (!r.ok) throw new Error(r.error);
-    const p = r.data;
-    document.getElementById('pm_baseHours').value = p.baseHours;
-    document.getElementById('pm_otRate1').value = p.otRate1;
-    document.getElementById('pm_otRate2').value = p.otRate2;
-    document.getElementById('pm_restNumerator').value = p.restNumerator;
-    document.getElementById('pm_restDenominator').value = p.restDenominator;
-    document.getElementById('pm_holidayMultiplier').value = p.holidayMultiplier;
-    document.getElementById('pm_laborInsuranceEmpRate').value = p.laborInsuranceEmpRate;
-    document.getElementById('pm_healthInsuranceRate').value = p.healthInsuranceRate;
-    document.getElementById('pm_healthInsuranceEmpRate').value = p.healthInsuranceEmpRate;
-    document.getElementById('pm_lateDeduction').value = p.lateDeduction;
-  } catch (ex) { toast(ex.message, 'error'); }
-}
-async function saveParams() {
-  const data = {
-    '月基本工時': Number(document.getElementById('pm_baseHours').value),
-    '加班倍率1': Number(document.getElementById('pm_otRate1').value),
-    '加班倍率2': Number(document.getElementById('pm_otRate2').value),
-    '休上倍率分子': Number(document.getElementById('pm_restNumerator').value),
-    '休上倍率分母': Number(document.getElementById('pm_restDenominator').value),
-    '國上倍率': Number(document.getElementById('pm_holidayMultiplier').value),
-    '勞保員工自付比率': Number(document.getElementById('pm_laborInsuranceEmpRate').value),
-    '健保費率': Number(document.getElementById('pm_healthInsuranceRate').value),
-    '健保員工自付比率': Number(document.getElementById('pm_healthInsuranceEmpRate').value),
-    '遲到單次扣款': Number(document.getElementById('pm_lateDeduction').value)
-  };
-  try {
-    const r = await callApi('saveParams', { data });
-    if (!r.ok) throw new Error(r.error);
-    toast('參數已儲存', 'success');
+    toast('級距已儲存', 'success'); loadPerf();
   } catch (ex) { toast(ex.message, 'error'); }
 }
 
@@ -811,19 +715,74 @@ function renderTenure() {
   tenureList.forEach((row, i) => {
     const tr = document.createElement('tr');
     tr.innerHTML =
-      '<td><input type="number" value="' + row.years + '" style="width:120px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="tenureList[' + i + '].years=Number(this.value)"></td>' +
-      '<td><input type="number" value="' + row.bonus + '" style="width:160px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="tenureList[' + i + '].bonus=Number(this.value)"></td>' +
-      '<td><button class="btn-danger" onclick="tenureList.splice(' + i + ',1); renderTenure();">刪除</button></td>';
+      '<td><input type="text" value="'+escAttr(row.title)+'" placeholder="如：櫃台" style="width:140px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="tenureList['+i+'].title=this.value"></td>' +
+      '<td><input type="number" value="'+row.years+'" style="width:120px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="tenureList['+i+'].years=Number(this.value)"></td>' +
+      '<td><input type="number" value="'+row.bonus+'" style="width:140px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="tenureList['+i+'].bonus=Number(this.value)"></td>' +
+      '<td><button class="btn-danger" onclick="tenureList.splice('+i+',1); renderTenure();">刪除</button></td>';
     tb.appendChild(tr);
   });
 }
-function addTenureRow() { tenureList.push({ years: 0, bonus: 0 }); renderTenure(); }
+function addTenureRow() { tenureList.push({ title:'櫃台', years: 0, bonus: 0 }); renderTenure(); }
 async function saveTenure() {
   try {
     const r = await callApi('saveTenure', { data: tenureList });
     if (!r.ok) throw new Error(r.error);
-    toast('年資對照已儲存', 'success');
-    loadTenure();
+    toast('年資對照已儲存', 'success'); loadTenure();
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+async function loadRate() {
+  try {
+    const r = await callApi('getHourlyRateTable');
+    if (!r.ok) throw new Error(r.error);
+    rateList = r.data || [];
+    renderRate();
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+function renderRate() {
+  const tb = document.querySelector('#rateTable tbody');
+  tb.innerHTML = '';
+  rateList.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input type="text" value="'+escAttr(row.branch)+'" placeholder="三樹" style="width:140px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="rateList['+i+'].branch=this.value"></td>' +
+      '<td><input type="text" value="'+escAttr(row.title)+'" placeholder="櫃台" style="width:140px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="rateList['+i+'].title=this.value"></td>' +
+      '<td><input type="number" step="0.01" value="'+row.hourlyRate+'" style="width:120px; padding:6px; border:1px solid var(--border); border-radius:6px;" onchange="rateList['+i+'].hourlyRate=Number(this.value)"></td>' +
+      '<td><button class="btn-danger" onclick="rateList.splice('+i+',1); renderRate();">刪除</button></td>';
+    tb.appendChild(tr);
+  });
+}
+function addRateRow() { rateList.push({ branch:'', title:'櫃台', hourlyRate: 0 }); renderRate(); }
+async function saveRateTable() {
+  try {
+    const r = await callApi('saveHourlyRateTable', { data: rateList });
+    if (!r.ok) throw new Error(r.error);
+    toast('已儲存', 'success'); loadRate();
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+
+async function loadParams() {
+  try {
+    const r = await callApi('getParams');
+    if (!r.ok) throw new Error(r.error);
+    const p = r.data;
+    document.getElementById('pm_baseHours').value = p.baseHours;
+    document.getElementById('pm_laborInsuranceEmpRate').value = p.laborInsuranceEmpRate;
+    document.getElementById('pm_healthInsuranceRate').value = p.healthInsuranceRate;
+    document.getElementById('pm_healthInsuranceEmpRate').value = p.healthInsuranceEmpRate;
+  } catch (ex) { toast(ex.message, 'error'); }
+}
+async function saveParams() {
+  const data = {
+    '月基本工時': Number(document.getElementById('pm_baseHours').value),
+    '勞保員工自付比率': Number(document.getElementById('pm_laborInsuranceEmpRate').value),
+    '健保費率': Number(document.getElementById('pm_healthInsuranceRate').value),
+    '健保員工自付比率': Number(document.getElementById('pm_healthInsuranceEmpRate').value)
+  };
+  try {
+    const r = await callApi('saveParams', { data });
+    if (!r.ok) throw new Error(r.error);
+    toast('參數已儲存', 'success');
   } catch (ex) { toast(ex.message, 'error'); }
 }
 
